@@ -6,7 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
 import swervelib.SwerveInputStream;
+
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,43 +25,45 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem drivebase = new SwerveSubsystem();
+  //private final SwerveSubsystem drivebase = new SwerveSubsystem();//Remember to add new swerve.json
+  private final IntakeArmSubsystem  intakeArm = new IntakeArmSubsystem();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
- 
-
-  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> m_driverController.getLeftY()*-1,
-                                                                () -> m_driverController.getLeftX()*-1)
-                                                            .withControllerRotationAxis(() ->
-                                                                                            m_driverController.getRightX() *
-                                                                                            -1)
-                                                            .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.3)
-                                                            .scaleRotation(0.6)
-                                                            .allianceRelativeControl(false);
-  SwerveInputStream driveDirectAngle     = driveAngularVelocity.copy()
-                                                               .withControllerHeadingAxis(() -> m_driverController.getRightX(),
-                                                                                          () -> m_driverController.getRightY())
-                                                               .headingWhile(true);
+  // SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+  //                                                               () -> m_driverController.getLeftY()*-1,
+  //                                                               () -> m_driverController.getLeftX()*-1)
+  //                                                           .withControllerRotationAxis(() ->
+  //                                                                                           m_driverController.getRightX() *
+  //                                                                                           -1)
+  //                                                           .deadband(OperatorConstants.DEADBAND)
+  //                                                           .scaleTranslation(0.3)
+  //                                                           .scaleRotation(0.6)
+  //                                                           .allianceRelativeControl(false);
+  // SwerveInputStream driveDirectAngle     = driveAngularVelocity.copy()
+  //                                                              .withControllerHeadingAxis(() -> m_driverController.getRightX(),
+  //                                                                                         () -> m_driverController.getRightY())
+  //                                                              .headingWhile(true);
 
 
-  SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                   () -> -m_driverController.getLeftY(),
-                                                                   () -> -m_driverController.getLeftX())
-                                                               .withControllerRotationAxis(() -> m_driverController.getRawAxis(
-                                                                   2))
-                                                               .deadband(OperatorConstants.DEADBAND)
-                                                               .scaleTranslation(0.8)
-                                                               .allianceRelativeControl(true);
+  // SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
+  //                                                                  () -> -m_driverController.getLeftY(),
+  //                                                                  () -> -m_driverController.getLeftX())
+  //                                                              .withControllerRotationAxis(() -> m_driverController.getRawAxis(
+  //                                                                  2))
+  //                                                              .deadband(OperatorConstants.DEADBAND)
+  //                                                              .scaleTranslation(0.8)
+  //                                                              .allianceRelativeControl(true);
 
                                                                
  /** The container for the robot. Contains subsystems, OI devices, and commands. */
  public RobotContainer() {
   // Configure the trigger bindings
   configureBindings();
+
+  intakeArm.setDefaultCommand(intakeArm.setAngle(Degrees.of(0)));
 }
 
   /**
@@ -73,7 +80,8 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-
+    m_driverController.button(1).whileTrue(intakeArm.setAngle(Degrees.of(120)));
+    m_driverController.button(2).onTrue(intakeArm.setAngle(Degrees.of(105)));
   }
 
   /**
