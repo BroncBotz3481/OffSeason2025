@@ -44,7 +44,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withFeedforward(new ArmFeedforward(0, 0, 0))
   .withSimFeedforward(new ArmFeedforward(0, 0, 0))
   // Telemetry name and verbosity level
-  .withTelemetry("ArmMotor", TelemetryVerbosity.HIGH)
+  .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
   .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(28)))
@@ -72,7 +72,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withLength(Meters.of(0.3511296))
   .withMass(Pounds.of(8))
   // Telemetry name and verbosity for the arm.
-  .withTelemetry("Arm", TelemetryVerbosity.HIGH);
+  .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
 
   // Arm Mechanism
   private Arm arm = new Arm(armCfg);

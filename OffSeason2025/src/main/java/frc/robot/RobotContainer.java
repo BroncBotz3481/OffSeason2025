@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.OutakeArmSubsystem;
 import swervelib.SwerveInputStream;
 
 import static edu.wpi.first.units.Units.Degree;
@@ -26,7 +27,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final SwerveSubsystem drivebase = new SwerveSubsystem();//Remember to add new swerve.json
-  private final IntakeArmSubsystem  intakeArmSubsystem = new IntakeArmSubsystem();
+  private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
+  private final OutakeArmSubsystem outakeArmSubsystem = new OutakeArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -64,6 +66,8 @@ public class RobotContainer {
   configureBindings();
 
   intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Degrees.of(150)));
+  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(Degrees.of(-15)));
+
 
 }
 
@@ -84,6 +88,8 @@ public class RobotContainer {
     
     m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Degrees.of(45)));
     m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Degrees.of(20)));
+    m_driverController.button(3).whileTrue(outakeArmSubsystem.setAngle(Degrees.of(25)));
+    m_driverController.button(4).whileTrue(outakeArmSubsystem.setAngle(Degrees.of(-25)));
 
   }
 
