@@ -26,7 +26,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final SwerveSubsystem drivebase = new SwerveSubsystem();//Remember to add new swerve.json
-  private final IntakeArmSubsystem  intakeArm = new IntakeArmSubsystem();
+  private final IntakeArmSubsystem  intakeArmSubsystem = new IntakeArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -63,7 +63,8 @@ public class RobotContainer {
   // Configure the trigger bindings
   configureBindings();
 
-  intakeArm.setDefaultCommand(intakeArm.setAngle(Degrees.of(0)));
+  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Degrees.of(150)));
+
 }
 
   /**
@@ -80,8 +81,10 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.button(1).whileTrue(intakeArm.setAngle(Degrees.of(120)));
-    m_driverController.button(2).onTrue(intakeArm.setAngle(Degrees.of(105)));
+    
+    m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Degrees.of(45)));
+    m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Degrees.of(20)));
+
   }
 
   /**
