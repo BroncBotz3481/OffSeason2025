@@ -1,4 +1,4 @@
-package frc.robot.systems;
+/*package frc.robot.systems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -57,7 +57,7 @@ public class ScoringSystem
                    .andThen(Commands.parallel(m_coralIntake.wristScore(),
                                               m_elevator.getCoralCommand(m_targetSystem).repeatedly())
                                     .withDeadline(m_coralArm.score()).withTimeout(1)
-                                    .until(() -> m_coralArm.coralScored())).andThen(m_coralArm.setCoralArmAngle(-40));*/
+                                    .until(() -> m_coralArm.coralScored())).andThen(m_coralArm.setCoralArmAngle(-40));
   }
 
   public Command restArmsSafe()
@@ -132,7 +132,7 @@ public class ScoringSystem
   }
 
 }
-
+*/
 //                     WALDO
 ///                     ( ) /-----\
 ///                  |||||||||
