@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.OutakeArmSubsystem;
@@ -12,6 +13,7 @@ import swervelib.SwerveInputStream;
 
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -29,6 +31,7 @@ public class RobotContainer {
   //private final SwerveSubsystem drivebase = new SwerveSubsystem();//Remember to add new swerve.json
   private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
   private final OutakeArmSubsystem outakeArmSubsystem = new OutakeArmSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -67,6 +70,9 @@ public class RobotContainer {
 
   intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Degrees.of(150)));
   outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(Degrees.of(-15)));
+  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.setHeight(Inches.of(0)));
+
+  
 
 
 }
@@ -90,6 +96,7 @@ public class RobotContainer {
     m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Degrees.of(20)));
     m_driverController.button(3).whileTrue(outakeArmSubsystem.setAngle(Degrees.of(25)));
     m_driverController.button(4).whileTrue(outakeArmSubsystem.setAngle(Degrees.of(-25)));
+    m_driverController.button(5).whileTrue(elevatorSubsystem.setHeight(Inches.of(90)));
 
   }
 
