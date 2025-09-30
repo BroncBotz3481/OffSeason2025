@@ -36,6 +36,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class OutakeArmSubsystem extends SubsystemBase {
+  private SparkMax spark = new SparkMax(9, MotorType.kBrushless);
 
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
@@ -55,9 +56,12 @@ public class OutakeArmSubsystem extends SubsystemBase {
   .withIdleMode(MotorMode.BRAKE)
   .withStatorCurrentLimit(Amps.of(40))
   .withClosedLoopRampRate(Seconds.of(0.25))
-  .withOpenLoopRampRate(Seconds.of(0.25));
+  .withOpenLoopRampRate(Seconds.of(0.25)) 
+  .withExternalEncoder(spark.getAbsoluteEncoder())
+  .withExternalEncoderInverted(true)
+  .withUseExternalFeedbackEncoder(true)
+  .withZeroOffset(Degrees.of(0));;
 
-  private SparkMax spark = new SparkMax(9, MotorType.kBrushless);
 
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
   
