@@ -5,29 +5,27 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Feet;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-import java.lang.management.MemoryType;
-
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import yams.mechanisms.SmartMechanism;
-import yams.mechanisms.config.ArmConfig;
-import yams.mechanisms.positional.Arm;
+import yams.mechanisms.config.ElevatorConfig;
+
+import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
@@ -35,21 +33,23 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class OutakeArmSubsystem extends SubsystemBase {
+public class ElevatorSubsystem extends SubsystemBase {
 
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
+  // Mechanism Circumference is the distance traveled by each mechanism rotation converting rotations to meters.
+  .withMechanismCircumference(Meters.of(2 * Math.PI * 0.015875))
   // Feedback Constants (PID Constants)
-  .withClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-  .withSimClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  .withClosedLoopController(4, 0, 0, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
+  .withSimClosedLoopController(4, 0, 0, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
   // Feedforward Constants
-  .withFeedforward(new ArmFeedforward(0, 0, 0))
-  .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+  .withFeedforward(new ElevatorFeedforward(0, 0, 0))
+  .withSimFeedforward(new ElevatorFeedforward(0, 0, 0))
   // Telemetry name and verbosity level
-  .withTelemetry("OutakeArm", TelemetryVerbosity.HIGH)
+  .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(5)))
+  .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(15)))
   // Motor properties to prevent over currenting.
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
@@ -57,28 +57,41 @@ public class OutakeArmSubsystem extends SubsystemBase {
   .withClosedLoopRampRate(Seconds.of(0.25))
   .withOpenLoopRampRate(Seconds.of(0.25));
 
-  private SparkMax spark = new SparkMax(6, MotorType.kBrushless);
+  // Vendor motor controller object
+  private SparkMax spark = new SparkMax(7, MotorType.kBrushless);
 
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
+  // Create our SmartMotorController from our Spark and config with the NEO.
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(2), smcConfig);
+
+  private ElevatorConfig elevconfig = new ElevatorConfig(sparkSmartMotorController)
+      .withStartingHeight(Meters.of(Inches.of(36.444).in(Meters)))
+      .withHardLimits(Meters.of(0.925), Meters.of(2.0658))
+      .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
+      .withMass(Pounds.of(28));
+
+  //Elevator Mechanism
+  private Elevator elevator = new Elevator(elevconfig);
+
+  /**
+   * Set the height of the elevator.
+   * @param angle Distance to go to.
+   */
+  public Command setHeight(Distance height) { return elevator.setHeight(height);}
+
+  /**
+   * Move the elevator up and down.
+   * @param dutycycle [-1, 1] speed to set the elevator too.
+   */
+  public Command set(double dutycycle) { return elevator.set(dutycycle);}
+
+  /**
+   * Run sysId on the {@link Elevator}
+   */
+  public Command sysId() { return elevator.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
+
   
- private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
-  // Soft limit is applied to the SmartMotorControllers PID
-  .withSoftLimits(Degrees.of(-50), Degrees.of(50))
-  // Hard limit is applied to the simulation.
-  .withHardLimit(Degrees.of(-50), Degrees.of(50))
-  // Starting position is where your arm starts
-  .withStartingPosition(Degrees.of(-15))
-  // Length and mass of your arm for sim.
-  .withLength(Meters.of(0.3471418))
-  .withMass(Pounds.of(6))
-  // Telemetry name and verbosity for the arm.
-  .withTelemetry("OutakeArm", TelemetryVerbosity.HIGH);
-
-  // Arm Mechanism
-  private Arm arm = new Arm(armCfg);
-
   /** Creates a new ExampleSubsystem. */
-  public OutakeArmSubsystem() {}
+  public ElevatorSubsystem() {}
 
   /**
    * Example command factory method.
@@ -94,10 +107,6 @@ public class OutakeArmSubsystem extends SubsystemBase {
         });
   }
 
-  public Command setAngle(Angle angle) { return arm.setAngle(angle);}
-  public Command set(double dutycycle) { return arm.set(dutycycle);}
-  public Command sysId() { return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
-
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
@@ -111,12 +120,14 @@ public class OutakeArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    arm.updateTelemetry();
+    elevator.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-    arm.simIterate();
+    elevator.updateTelemetry();
   }
 }
+
+
