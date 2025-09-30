@@ -96,7 +96,7 @@ public class RobotContainer {
     m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Degrees.of(20)));
     m_driverController.button(3).whileTrue(outakeArmSubsystem.setAngle(Degrees.of(25)));
     m_driverController.button(4).whileTrue(outakeArmSubsystem.setAngle(Degrees.of(-25)));
-    m_driverController.button(5).whileTrue(elevatorSubsystem.setHeight(Inches.of(90)));
+    m_driverController.button(5).whileTrue(elevatorSubsystem.setHeight(Inches.of(70)));
 
   }
 

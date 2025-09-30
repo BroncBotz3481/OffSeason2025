@@ -17,6 +17,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Distance;
@@ -40,8 +41,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   // Mechanism Circumference is the distance traveled by each mechanism rotation converting rotations to meters.
   .withMechanismCircumference(Meters.of(2 * Math.PI * 0.015875))
   // Feedback Constants (PID Constants)
-  .withClosedLoopController(4, 0, 0, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
-  .withSimClosedLoopController(4, 0, 0, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
+  .withClosedLoopController(30, 0, 0, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
+  .withSimClosedLoopController(30, 0, 0, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
   // Feedforward Constants
   .withFeedforward(new ElevatorFeedforward(0, 0, 0))
   .withSimFeedforward(new ElevatorFeedforward(0, 0, 0))
@@ -55,10 +56,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   .withIdleMode(MotorMode.BRAKE)
   .withStatorCurrentLimit(Amps.of(40))
   .withClosedLoopRampRate(Seconds.of(0.25))
-  .withOpenLoopRampRate(Seconds.of(0.25));
+  .withOpenLoopRampRate(Seconds.of(0.25))
+  .withFollowers(Pair.of(new SparkMax(12, MotorType.kBrushless), false));
 
   // Vendor motor controller object
-  private SparkMax spark = new SparkMax(7, MotorType.kBrushless);
+  private SparkMax spark = new SparkMax(11, MotorType.kBrushless);
 
   // Create our SmartMotorController from our Spark and config with the NEO.
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(2), smcConfig);
@@ -126,7 +128,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-    elevator.updateTelemetry();
+    elevator.simIterate();
   }
 }
 

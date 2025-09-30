@@ -56,7 +56,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withOpenLoopRampRate(Seconds.of(0.25));
 
   // Vendor motor controller object
-  private SparkMax spark = new SparkMax(5, MotorType.kBrushless);
+  private SparkMax spark = new SparkMax(9, MotorType.kBrushless);
 
   // Create our SmartMotorController from our Spark and config with the NEO.
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
