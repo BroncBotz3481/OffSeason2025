@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 
 /**
@@ -23,5 +24,36 @@ public final class Constants {
   }
   public static final double              maxSpeed      = 7; //meters per second
 
+public final class ElevatorConstants {
+
+  public static final int canIDMain = 11;
+  public static final int canIDFollower = 12;
+  
+
+  public static final Distance drumRadius = Meters.of(2 * Math.PI * 0.015875);
+
+  public static final double kP = 30;
+  public static final double kI = 0;
+  public static final double kD = 0;
+  public static final double ksimP = 30;
+  public static final double ksimI = 0;
+  public static final double ksimD = 0;
+
+  public static final double kS = 0;
+  public static final double kG = 0;
+  public static final double kV = 0;
+  public static final double ksimS = 0;
+  public static final double ksimG = 0;
+  public static final double ksimV = 0;
+
+  public static final int gearbox = 15;
+  public static final double k_currentLimit = 40;
+  
+  public static final double startingHeight = 0;
+  
+
+
+  
+}
   
 }
