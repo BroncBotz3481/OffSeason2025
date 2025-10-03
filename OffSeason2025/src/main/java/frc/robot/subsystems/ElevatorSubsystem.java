@@ -23,6 +23,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElevatorConstants;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ElevatorConfig;
 
@@ -39,37 +40,37 @@ public class ElevatorSubsystem extends SubsystemBase {
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   // Mechanism Circumference is the distance traveled by each mechanism rotation converting rotations to meters.
-  .withMechanismCircumference(Meters.of(2 * Math.PI * 0.015875))
+  .withMechanismCircumference(ElevatorConstants.mechanismCircumference)
   // Feedback Constants (PID Constants)
-  .withClosedLoopController(30, 0, 0, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
-  .withSimClosedLoopController(30, 0, 0, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
+  .withClosedLoopController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
+  .withSimClosedLoopController(ElevatorConstants.ksimP, ElevatorConstants.ksimI, ElevatorConstants.ksimD, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
   // Feedforward Constants
-  .withFeedforward(new ElevatorFeedforward(0, 0, 0))
-  .withSimFeedforward(new ElevatorFeedforward(0, 0, 0))
+  .withFeedforward(new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV))
+  .withSimFeedforward(new ElevatorFeedforward(ElevatorConstants.ksimS, ElevatorConstants.ksimG, ElevatorConstants.ksimV))
   // Telemetry name and verbosity level
   .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(15)))
+  .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(ElevatorConstants.gearbox)))
   // Motor properties to prevent over currenting.
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
-  .withStatorCurrentLimit(Amps.of(40))
+  .withStatorCurrentLimit(ElevatorConstants.statorCurrentLimit)
   .withClosedLoopRampRate(Seconds.of(0.25))
   .withOpenLoopRampRate(Seconds.of(0.25))
-  .withFollowers(Pair.of(new SparkMax(12, MotorType.kBrushless), false));
+  .withFollowers(Pair.of(new SparkMax(ElevatorConstants.canIDFollower, MotorType.kBrushless), false));
 
   // Vendor motor controller object
-  private SparkMax spark = new SparkMax(11, MotorType.kBrushless);
+  private SparkMax spark = new SparkMax(ElevatorConstants.canIDMain, MotorType.kBrushless);
 
   // Create our SmartMotorController from our Spark and config with the NEO.
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(2), smcConfig);
 
   private ElevatorConfig elevconfig = new ElevatorConfig(sparkSmartMotorController)
-      .withStartingHeight(Meters.of(Inches.of(36.444).in(Meters)))
-      .withHardLimits(Meters.of(0.925), Meters.of(2.0658))
+      .withStartingHeight(ElevatorConstants.startingHeight)
+      .withHardLimits(ElevatorConstants.hardLimitMin, ElevatorConstants.hardLimitMax)
       .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
-      .withMass(Pounds.of(28));
+      .withMass(ElevatorConstants.mass);
 
   //Elevator Mechanism
   private Elevator elevator = new Elevator(elevconfig);

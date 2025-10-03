@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Mass;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -29,27 +32,30 @@ public final class ElevatorConstants {
   public static final int canIDMain = 11;
   public static final int canIDFollower = 12;
   
+  public static final double drumRadius = 0.015875;
+  public static final Distance mechanismCircumference = Meters.of(2 * Math.PI * drumRadius);
 
-  public static final Distance drumRadius = Meters.of(2 * Math.PI * 0.015875);
-
-  public static final double kP = 30;
+  public static final double kP = 1.6 / (2 * Math.PI); // convert radians to rotations
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final double ksimP = 30;
+  public static final double ksimP = 1.6 / (2 * Math.PI);
   public static final double ksimI = 0;
   public static final double ksimD = 0;
 
   public static final double kS = 0;
-  public static final double kG = 0;
+  public static final double kG = 0.13;
   public static final double kV = 0;
   public static final double ksimS = 0;
   public static final double ksimG = 0;
   public static final double ksimV = 0;
 
   public static final int gearbox = 15;
-  public static final double k_currentLimit = 40;
+  public static final Current statorCurrentLimit = Amps.of(40);
   
-  public static final double startingHeight = 0;
+  public static final Distance startingHeight = Meters.of(0);
+  public static final Distance hardLimitMin = Meters.of(0);
+  public static final Distance hardLimitMax = Meters.of(2.0658);
+  public static final Mass mass = Pounds.of(28);
   
 
 
