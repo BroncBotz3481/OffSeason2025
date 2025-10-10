@@ -4,29 +4,31 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Setpoints;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ElevatorConfig;
-
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
@@ -37,16 +39,32 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
+
+  private SparkMax m_motor = new SparkMax(ElevatorConstants.canIDMain, MotorType.kBrushless);
+
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
-  // Mechanism Circumference is the distance traveled by each mechanism rotation converting rotations to meters.
   .withMechanismCircumference(ElevatorConstants.mechanismCircumference)
-  // Feedback Constants (PID Constants)
-  .withClosedLoopController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
-  .withSimClosedLoopController(ElevatorConstants.ksimP, ElevatorConstants.ksimI, ElevatorConstants.ksimD, MetersPerSecond.of(0.5), MetersPerSecondPerSecond.of(0.5))
+  
+  .withClosedLoopController(ElevatorConstants.kP,
+                            ElevatorConstants.kI, 
+                            ElevatorConstants.kD, 
+                            MetersPerSecond.of(0.5), 
+                            MetersPerSecondPerSecond.of(0.5))
+  
+  .withSimClosedLoopController(ElevatorConstants.ksimP, 
+                               ElevatorConstants.ksimI, 
+                               ElevatorConstants.ksimD, 
+                               MetersPerSecond.of(0.5), 
+                               MetersPerSecondPerSecond.of(0.5))
   // Feedforward Constants
-  .withFeedforward(new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV))
-  .withSimFeedforward(new ElevatorFeedforward(ElevatorConstants.ksimS, ElevatorConstants.ksimG, ElevatorConstants.ksimV))
+  .withFeedforward(new ElevatorFeedforward(ElevatorConstants.kS, 
+                                           ElevatorConstants.kG,
+                                           ElevatorConstants.kV))
+                                           
+  .withSimFeedforward(new ElevatorFeedforward(ElevatorConstants.ksimS, 
+                                              ElevatorConstants.ksimG, 
+                                              ElevatorConstants.ksimV))
   // Telemetry name and verbosity level
   .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
@@ -60,11 +78,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   .withOpenLoopRampRate(Seconds.of(0.25))
   .withFollowers(Pair.of(new SparkMax(ElevatorConstants.canIDFollower, MotorType.kBrushless), false));
 
+
   // Vendor motor controller object
-  private SparkMax spark = new SparkMax(ElevatorConstants.canIDMain, MotorType.kBrushless);
 
   // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(2), smcConfig);
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(2), smcConfig);
 
   private ElevatorConfig elevconfig = new ElevatorConfig(sparkSmartMotorController)
       .withStartingHeight(ElevatorConstants.startingHeight)
@@ -73,42 +91,12 @@ public class ElevatorSubsystem extends SubsystemBase {
       .withMass(ElevatorConstants.mass);
 
   //Elevator Mechanism
-  private Elevator elevator = new Elevator(elevconfig);
+  private Elevator m_elevator = new Elevator(elevconfig);
 
-  /**
-   * Set the height of the elevator.
-   * @param angle Distance to go to.
-   */
-  public Command setHeight(Distance height) { return elevator.setHeight(height);}
 
-  /**
-   * Move the elevator up and down.
-   * @param dutycycle [-1, 1] speed to set the elevator too.
-   */
-  public Command set(double dutycycle) { return elevator.set(dutycycle);}
-
-  /**
-   * Run sysId on the {@link Elevator}
-   */
-  public Command sysId() { return elevator.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
-
-  
   /** Creates a new ExampleSubsystem. */
   public ElevatorSubsystem() {}
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
@@ -123,14 +111,74 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    elevator.updateTelemetry();
+    m_elevator.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-    elevator.simIterate();
+    m_elevator.simIterate();
   }
+
+  private Trigger aroundHeight(double height, double tolerance) {
+    return new Trigger(() -> MathUtil.isNear(height,
+                              getHeightMeters(),
+                              tolerance));
+                                }
+
+  private double getHeightMeters() {
+    return m_elevator.getHeight().in(Meters);
+  }
+
+                                /**
+   * Set the height of the elevator.
+   * @param angle Distance to go to.
+   */
+  public Command setElevatorHeight(double heightInInches) { 
+    return m_elevator.setHeight(Units.Inches.of(heightInInches))
+                     .until(aroundHeight(getHeightMeters(), ElevatorConstants.kElevatorAllowableError));
+  }
+
+  /**
+   * Move the elevator up and down.
+   * @param dutycycle [-1, 1] speed to set the elevator too.
+   */
+  public Command set(double dutycycle) { 
+    return m_elevator.set(dutycycle);
+  }
+
+  /**
+   * Run sysId on the {@link Elevator}
+   */
+  public Command sysId() { 
+    return m_elevator.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));
+  }
+
+  public Command setPower(double d)
+  {
+    return run(() -> m_motor.set(d));
+  }
+  
+  public Command CoralL1()
+  {
+    return setPower(-0.1).until(m_elevator.min());
+  }
+  public Command CoralL2()
+  {
+    return setElevatorHeight(Setpoints.Elevator.Coral.L2);
+  }
+
+  public Command CoralL3()
+  {
+    return setElevatorHeight(Setpoints.Elevator.Coral.L3);
+  }
+
+  public Command CoralL4()
+  {
+    return setElevatorHeight(Setpoints.Elevator.Coral.L4);
+  }
+
+  
 }
 
 

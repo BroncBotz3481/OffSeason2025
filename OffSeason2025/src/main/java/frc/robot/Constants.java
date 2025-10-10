@@ -8,9 +8,11 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -56,8 +58,20 @@ public final class ElevatorConstants {
   public static final Distance hardLimitMin = Meters.of(0);
   public static final Distance hardLimitMax = Meters.of(2.0658);
   public static final Mass mass = Pounds.of(28);
+  public static final Distance absoluteOffset = Meters.of(0);
+ public static final double   kElevatorAllowableError   = RobotBase.isSimulation() ? 
+                                                          Units.inchesToMeters(1)
+                                                          : 0.07;
   
 
+
+  
+}
+public static class GroundConstants {
+
+  
+}
+public static class OutakeConstants {
 
   
 }

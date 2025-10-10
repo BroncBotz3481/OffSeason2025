@@ -28,13 +28,6 @@ public class Setpoints
       public static double HP = 0;
     }
 
-    public static class Algae
-    {
-      public static final double L23       = 0.039;
-      public static final double L34       = 0.0566;
-      public static final double NET       = 0.735;
-      public static final double PROCESSOR = 0.059;
-    }
   }
 
   public static class Arm
@@ -50,14 +43,7 @@ public class Setpoints
       public static double L4 = 67.9;
     }
 
-    public static class Algae
-    {
 
-      public static final double L34       = 37.2;
-      public static final double L23       = 2.637;
-      public static final double NET       = 90;
-      public static final double PROCESSOR = -32; // Guess
-    }
   }
 
   public static class AutoScoring
