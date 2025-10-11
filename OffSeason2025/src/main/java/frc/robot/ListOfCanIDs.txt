@@ -1,16 +1,21 @@
-1-LeftFrontDriveMotor
-2-LeftFrontAngleMotor
-3-RightFrontDriveMotor
-4-RightFrontAngleMotor
-5-LeftBackDriveMotor
-6-LeftBackAngleMotor
-7-RightBackDriveMotor
-8-RightBackAngleMotor
-9-IntakeArm
-10-OuttakeArm
-11-Elevator
-12-ElevatorFollower
-13-IntakeRoller
-14-OutakeRoller
+1. FrontLeft Drive
+2. FrontLeft Angle
+3. FrontLeft Encoder
+4. FrontRight Drive
+5. FrontRight Angle
+6. FrontRight Encoder
+7. BackLeft Drive
+8. BackLeft Angle
+9. BackLeft Encoder
+10.BackRight Drive
+11.BackRight Angle
+12.BackRight Encoder
+
+13-Elevator
+14-ElevatorFollower
+15-IntakeArm
+16-OutakeArm
+17-IntakeRoller
+18-OutakeRoller
 
 

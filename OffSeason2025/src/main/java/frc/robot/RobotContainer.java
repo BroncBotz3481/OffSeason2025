@@ -32,51 +32,56 @@ public class RobotContainer {
   private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
   private final OutakeArmSubsystem outakeArmSubsystem = new OutakeArmSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final SwerveSubsystem drivebase = new SwerveSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  // SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-  //                                                               () -> m_driverController.getLeftY()*-1,
-  //                                                               () -> m_driverController.getLeftX()*-1)
-  //                                                           .withControllerRotationAxis(() ->
-  //                                                                                           m_driverController.getRightX() *
-  //                                                                                           -1)
-  //                                                           .deadband(OperatorConstants.DEADBAND)
-  //                                                           .scaleTranslation(0.3)
-  //                                                           .scaleRotation(0.6)
-  //                                                           .allianceRelativeControl(false);
-  // SwerveInputStream driveDirectAngle     = driveAngularVelocity.copy()
-  //                                                              .withControllerHeadingAxis(() -> m_driverController.getRightX(),
-  //                                                                                         () -> m_driverController.getRightY())
-  //                                                              .headingWhile(true);
+  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                () -> m_driverController.getLeftY()*-1,
+                                                                () -> m_driverController.getLeftX()*-1)
+                                                            .withControllerRotationAxis(() ->
+                                                                                            m_driverController.getRightX() *
+                                                                                            -1)
+                                                            .deadband(OperatorConstants.DEADBAND)
+                                                            .scaleTranslation(0.3)
+                                                            .scaleRotation(0.6)
+                                                            .allianceRelativeControl(false);
+  SwerveInputStream driveDirectAngle     = driveAngularVelocity.copy()
+                                                               .withControllerHeadingAxis(() -> m_driverController.getRightX(),
+                                                                                          () -> m_driverController.getRightY())
+                                                               .headingWhile(true);
 
 
-  // SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
-  //                                                                  () -> -m_driverController.getLeftY(),
-  //                                                                  () -> -m_driverController.getLeftX())
-  //                                                              .withControllerRotationAxis(() -> m_driverController.getRawAxis(
-  //                                                                  2))
-  //                                                              .deadband(OperatorConstants.DEADBAND)
-  //                                                              .scaleTranslation(0.8)
-  //                                                              .allianceRelativeControl(true);
+  SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                   () -> -m_driverController.getLeftY(),
+                                                                   () -> -m_driverController.getLeftX())
+                                                               .withControllerRotationAxis(() -> m_driverController.getRawAxis(
+                                                                   2))
+                                                               .deadband(OperatorConstants.DEADBAND)
+                                                               .scaleTranslation(0.8)
+                                                               .allianceRelativeControl(true);
+
+  Command driveRobotOrientedAngularVelocity = drivebase.drive(driveAngularVelocity);
 
                                                                
  /** The container for the robot. Contains subsystems, OI devices, and commands. */
  public RobotContainer() {
   // Configure the trigger bindings
   configureBindings();
-
-  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Degrees.of(150)));
-  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(Degrees.of(-15)));
-  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.setElevatorHeight(67));
-
-  
+  defaultCommands();
+ 
 
 
 }
-
+public void defaultCommands(){
+  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Degrees.of(150)));
+  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(Degrees.of(-15)));
+  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.setElevatorHeight(67));
+  drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
+  
+}
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary

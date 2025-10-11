@@ -29,10 +29,18 @@ public final class Constants {
   }
   public static final double              maxSpeed      = 7; //meters per second
 
+public final class CanIDs{
+  public static final int ElevatorMain = 13;
+  public static final int ElevatorFollower = 14;
+  public static final int IntakeArm = 15;
+  public static final int OutakeArm = 16; 
+  public static final int IntakeRoller = 17;
+  public static final int OuttakeRoller= 18;
+}
+
 public final class ElevatorConstants {
 
-  public static final int canIDMain = 11;
-  public static final int canIDFollower = 12;
+  
   
   public static final double drumRadius = 0.015875;
   public static final Distance mechanismCircumference = Meters.of(2 * Math.PI * drumRadius);
@@ -72,6 +80,8 @@ public static class GroundConstants {
   
 }
 public static class OutakeConstants {
+
+  public static final double kArmAllowableError = RobotBase.isSimulation() ? 0.01 : 4 ;
 
   
 }

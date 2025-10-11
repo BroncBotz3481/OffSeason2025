@@ -16,15 +16,26 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.lang.management.MemoryType;
+import java.util.Map;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
+import frc.robot.Setpoints;
+import frc.robot.Setpoints.Elevator.Coral;
+import frc.robot.systems.TargetingSystem;
+import frc.robot.systems.TargetingSystem.ReefBranchLevel;
+import frc.robot.Constants.CanIDs;
+import frc.robot.Constants.ElevatorConstants;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
@@ -36,7 +47,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class OutakeArmSubsystem extends SubsystemBase {
-  private SparkMax spark = new SparkMax(10, MotorType.kBrushless);
+  private SparkMax spark = new SparkMax(CanIDs.OutakeArm, MotorType.kBrushless);
 
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
@@ -60,7 +71,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
   .withExternalEncoder(spark.getAbsoluteEncoder())
   .withExternalEncoderInverted(true)
   .withUseExternalFeedbackEncoder(true)
-  .withZeroOffset(Degrees.of(0));;
+  .withZeroOffset(Degrees.of(0));
 
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNeoVortex(1), smcConfig);
   
@@ -83,24 +94,94 @@ public class OutakeArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public OutakeArmSubsystem() {}
 
-  /**
-   * Example command factory method.
+  
+  
+  public Command setAngle(Angle angle) 
+  { 
+    return arm.setAngle(angle).until(arm.isNear(angle, Degrees.of(Constants.OutakeConstants.kArmAllowableError)));
+  }
+  public Command set(double dutycycle)
+  {
+     return arm.set(dutycycle);
+  }
+  public Command sysId() {
+     return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));
+    }
+
+
+   /**
+   * Gets the height of the elevator and compares it to the given height with the given tolerance.
    *
-   * @return a command
+   * @param height         Height in meters
+   * @param allowableError Tolerance in meters.
+   * @return Within that tolerance.
    */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+  public boolean aroundAngle(double angle, double allowableError)
+  {
+    return MathUtil.isNear(angle, arm.getAngle().in(Degrees), allowableError);
   }
 
-  public Command setAngle(Angle angle) { return arm.setAngle(angle);}
-  public Command set(double dutycycle) { return arm.set(dutycycle);}
-  public Command sysId() { return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
+  /**
+   * Gets the height of the elevator and compares it to the given height with the given tolerance.
+   *
+   * @param height Height in meters
+   * @return Within that tolerance.
+   */
+  public boolean aroundAngle(double angle)
+  {
+    return aroundAngle(angle, ElevatorConstants.kElevatorAllowableError);
+  }
 
+  public Command L1 (){
+    return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L1));
+  }
+  public Command L2 (){
+    return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L2));
+  }
+  public Command L3 (){
+    return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L3));
+  }
+  public Command L4 (){
+    return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L4));
+  }
+
+public Command getCoralCommand(TargetingSystem targetingSystem)
+  {
+    return Commands.select(Map.of(ReefBranchLevel.L1, L1(),
+                                  ReefBranchLevel.L2, L2(),
+                                  ReefBranchLevel.L3, L3(),
+                                  ReefBranchLevel.L4, L4()),
+                           targetingSystem::getTargetBranchLevel);
+  }
+
+   public Trigger atCoralAngle(TargetingSystem targetingSystem)
+  {
+    return new Trigger(() -> {
+      switch (targetingSystem.getTargetBranchLevel())
+      {
+        case L2 ->
+        {
+          return aroundAngle(Coral.L2);
+        }
+        case L3 ->
+        {
+          return aroundAngle(Coral.L3);
+        }
+        case L1 ->
+        {
+          return aroundAngle(Coral.L1);
+        }
+        case L4 ->
+        {
+          return aroundAngle(Coral.L4);
+        }
+      }
+      return false;
+    });
+  
+  }
+
+  
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *

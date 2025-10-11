@@ -12,6 +12,8 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.Map;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -23,10 +25,16 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
+import frc.robot.Constants.CanIDs;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.systems.TargetingSystem;
+import frc.robot.systems.TargetingSystem.ReefBranchLevel;
 import frc.robot.Setpoints;
+import frc.robot.Setpoints.Elevator.Coral;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
@@ -40,13 +48,13 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class ElevatorSubsystem extends SubsystemBase {
 
 
-  private SparkMax m_motor = new SparkMax(ElevatorConstants.canIDMain, MotorType.kBrushless);
+  private SparkMax m_motor = new SparkMax(CanIDs.ElevatorMain, MotorType.kBrushless);
 
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   .withMechanismCircumference(ElevatorConstants.mechanismCircumference)
   
-  .withClosedLoopController(ElevatorConstants.kP,
+  .withClosedLoopController(ElevatorConstants.kP, 
                             ElevatorConstants.kI, 
                             ElevatorConstants.kD, 
                             MetersPerSecond.of(0.5), 
@@ -76,7 +84,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   .withStatorCurrentLimit(ElevatorConstants.statorCurrentLimit)
   .withClosedLoopRampRate(Seconds.of(0.25))
   .withOpenLoopRampRate(Seconds.of(0.25))
-  .withFollowers(Pair.of(new SparkMax(ElevatorConstants.canIDFollower, MotorType.kBrushless), false));
+  .withFollowers(Pair.of(new SparkMax(CanIDs.ElevatorFollower, MotorType.kBrushless), false));
 
 
   // Vendor motor controller object
@@ -120,11 +128,35 @@ public class ElevatorSubsystem extends SubsystemBase {
     m_elevator.simIterate();
   }
 
-  private Trigger aroundHeight(double height, double tolerance) {
+  private Trigger atHeight(double height, double tolerance) {
     return new Trigger(() -> MathUtil.isNear(height,
                               getHeightMeters(),
                               tolerance));
                                 }
+
+ /**
+   * Gets the height of the elevator and compares it to the given height with the given tolerance.
+   *
+   * @param height         Height in meters
+   * @param allowableError Tolerance in meters.
+   * @return Within that tolerance.
+   */
+  public boolean aroundHeight(double height, double allowableError)
+  {
+    return MathUtil.isNear(height, getHeightMeters(), allowableError);
+  }
+
+  /**
+   * Gets the height of the elevator and compares it to the given height with the given tolerance.
+   *
+   * @param height Height in meters
+   * @return Within that tolerance.
+   */
+  public boolean aroundHeight(double height)
+  {
+    return aroundHeight(height, ElevatorConstants.kElevatorAllowableError);
+  }
+
 
   private double getHeightMeters() {
     return m_elevator.getHeight().in(Meters);
@@ -136,7 +168,7 @@ public class ElevatorSubsystem extends SubsystemBase {
    */
   public Command setElevatorHeight(double heightInInches) { 
     return m_elevator.setHeight(Units.Inches.of(heightInInches))
-                     .until(aroundHeight(getHeightMeters(), ElevatorConstants.kElevatorAllowableError));
+                     .until(atHeight(getHeightMeters(), ElevatorConstants.kElevatorAllowableError));
   }
 
   /**
@@ -178,7 +210,39 @@ public class ElevatorSubsystem extends SubsystemBase {
     return setElevatorHeight(Setpoints.Elevator.Coral.L4);
   }
 
+public Command getCoralCommand(TargetingSystem targetingSystem)
+  {
+    return Commands.select(Map.of(ReefBranchLevel.L1, CoralL1(),
+                                  ReefBranchLevel.L2, CoralL2(),
+                                  ReefBranchLevel.L3, CoralL3(),
+                                  ReefBranchLevel.L4, CoralL4()),
+                           targetingSystem::getTargetBranchLevel);
+  }
+    public Trigger atCoralHeight(TargetingSystem targetingSystem)
+  {
+    return new Trigger(() -> {
+      switch (targetingSystem.getTargetBranchLevel())
+      {
+        case L2 ->
+        {
+          return aroundHeight(Coral.L2);
+        }
+        case L3 ->
+        {
+          return aroundHeight(Coral.L3);
+        }
+        case L1 ->
+        {
+          return aroundHeight(Coral.L1);
+        }
+        case L4 ->
+        {
+          return aroundHeight(Coral.L4);
+        }
+      }
+      return false;
+    });
   
+  }
 }
-
 

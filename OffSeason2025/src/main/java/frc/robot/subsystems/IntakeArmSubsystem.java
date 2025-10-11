@@ -23,6 +23,9 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Setpoints;
+import frc.robot.Constants.CanIDs;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
@@ -34,6 +37,10 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class IntakeArmSubsystem extends SubsystemBase {
+
+
+  // Vendor motor controller object
+  private SparkMax m_motor = new SparkMax(CanIDs.IntakeArm, MotorType.kBrushless);
 
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
@@ -53,14 +60,15 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withIdleMode(MotorMode.BRAKE)
   .withStatorCurrentLimit(Amps.of(40))
   .withClosedLoopRampRate(Seconds.of(0.25))
-  .withOpenLoopRampRate(Seconds.of(0.25));
-
-  // Vendor motor controller object
-  private SparkMax spark = new SparkMax(9, MotorType.kBrushless);
-
+  .withOpenLoopRampRate(Seconds.of(0.25))
+  .withExternalEncoder(m_motor.getAbsoluteEncoder())
+  .withExternalEncoderInverted(true)
+  .withUseExternalFeedbackEncoder(true)
+  .withZeroOffset(Degrees.of(0));
+  
   // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNeo550(1), smcConfig);
-
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNeo550(1), smcConfig);
+ 
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
   .withSoftLimits(Degrees.of(9), Degrees.of(150))
@@ -74,41 +82,39 @@ public class IntakeArmSubsystem extends SubsystemBase {
   // Telemetry name and verbosity for the arm.
   .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
 
-  // Arm Mechanism
-  private Arm arm = new Arm(armCfg);
 
-  /**
+ 
+  // Arm Mechanism
+  private Arm m_Arm = new Arm(armCfg);
+
+ 
+  /** Creates a new ExampleSubsystem. */
+  public IntakeArmSubsystem() {}
+
+   /**
    * Set the angle of the arm.
    * @param angle Angle to go to.
    */
-  public Command setAngle(Angle angle) { return arm.setAngle(angle);}
-
+  public Command setAngle(Angle angle) 
+  { 
+    return m_Arm.setAngle(angle).until(m_Arm.isNear(angle, Degrees.of(Constants.OutakeConstants.kArmAllowableError)));
+  }
   /**
    * Move the arm up and down.
    * @param dutycycle [-1, 1] speed to set the arm too.
    */
-  public Command set(double dutycycle) { return arm.set(dutycycle);}
+  public Command set(double dutycycle) { return m_Arm.set(dutycycle);}
 
   /**
    * Run sysId on the {@link Arm}
    */
-  public Command sysId() { return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
+  public Command sysId() { return m_Arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
 
-  /** Creates a new ExampleSubsystem. */
-  public IntakeArmSubsystem() {}
-
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+  public Command setGround(){
+    return setAngle(Degrees.of(Setpoints.Arm.GroundIntake.intakeAngle));
+  }
+  public Command setPass(){
+    return setAngle(Degrees.of(Setpoints.Arm.GroundIntake.passAngle));
   }
 
   /**
@@ -124,13 +130,13 @@ public class IntakeArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    arm.updateTelemetry();
+    m_Arm.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-    arm.simIterate();
+    m_Arm.simIterate();
   }
 }
 

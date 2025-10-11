@@ -1,6 +1,7 @@
 package frc.robot.systems;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -11,7 +12,7 @@ import swervelib.SwerveInputStream;
 
 
 
-public class ScoringSystem<LoadingSystem>
+public class ScoringSystem
 {
 
   private IntakeArmSubsystem    m_intake;
@@ -45,7 +46,8 @@ public class ScoringSystem<LoadingSystem>
   /// intact.
   public Command scoreCoralAuto()
   {
-    return null;
+    return m_swerve.stopDrivingCommand().andThen(Commands.parallel(
+           m_elevator.getCoralCommand(m_targetSystem).repeatedly(), m_outake.getCoralCommand(m_targetSystem).repeatedly()));
   }
 
   public Command restArmsSafe()

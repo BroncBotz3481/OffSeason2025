@@ -33,16 +33,19 @@ public class Setpoints
   public static class Arm
   {
 
-    public static class Coral
+    public static class OuttakeArm
     {
 
-      public static double HP = 13;// TOtAl GuesS
-      public static double L1 = 0;
-      public static double L2 = 12;
-      public static double L3 = 45.14;
-      public static double L4 = 67.9;
+      public static double passAngle = 0;// TOtAl GuesS
+      public static double L1 = 100;
+      public static double L2 = 120;
+      public static double L3 = 120;
+      public static double L4 = 180;
     }
-
+    public static class GroundIntake{
+      public static double intakeAngle = 0.0;
+      public static double passAngle = 120;
+    }
 
   }
 
