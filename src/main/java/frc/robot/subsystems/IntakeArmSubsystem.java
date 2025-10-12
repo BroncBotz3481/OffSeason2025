@@ -18,14 +18,18 @@ import static edu.wpi.first.units.Units.Volts;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Setpoints;
 import frc.robot.Constants.CanIDs;
+import frc.robot.Constants.GroundConstants;
+import frc.robot.Setpoints.Arm.GroundIntake;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
@@ -45,77 +49,91 @@ public class IntakeArmSubsystem extends SubsystemBase {
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   // Feedback Constants (PID Constants)
-  .withClosedLoopController(100, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-  .withSimClosedLoopController(100, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  .withClosedLoopController(GroundConstants.kP, GroundConstants.kI, GroundConstants.kD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  .withSimClosedLoopController(GroundConstants.ksimP, GroundConstants.ksimI, GroundConstants.ksimD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
   // Feedforward Constants
-  .withFeedforward(new ArmFeedforward(0, 0, 0))
-  .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+  .withFeedforward(new ArmFeedforward(GroundConstants.kS, GroundConstants.kG, GroundConstants.kV))
+  .withSimFeedforward(new ArmFeedforward(GroundConstants.ksimS, GroundConstants.ksimG, GroundConstants.ksimV))
   // Telemetry name and verbosity level
   .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(28)))
+  .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(GroundConstants.gearbox)))
   // Motor properties to prevent over currenting.
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
-  .withStatorCurrentLimit(Amps.of(40))
+  .withStatorCurrentLimit(GroundConstants.statorCurrentLimit)
   .withClosedLoopRampRate(Seconds.of(0.25))
   .withOpenLoopRampRate(Seconds.of(0.25))
   .withExternalEncoder(m_motor.getAbsoluteEncoder())
   .withExternalEncoderInverted(true)
-  .withUseExternalFeedbackEncoder(true)
-  .withZeroOffset(Degrees.of(0));
+  .withUseExternalFeedbackEncoder(true);
+  //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
   
   // Create our SmartMotorController from our Spark and config with the NEO.
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNeo550(1), smcConfig);
  
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
-  .withSoftLimits(Degrees.of(9), Degrees.of(150))
+  .withSoftLimits(GroundConstants.softLimitMin, GroundConstants.softLimitMax)
   // Hard limit is applied to the simulation.
-  .withHardLimit(Degrees.of(5), Degrees.of(160))
+  .withHardLimit(GroundConstants.hardLimitMin, GroundConstants.hardLimitMax)
   // Starting position is where your arm starts
-  .withStartingPosition(Degrees.of(150))
+  .withStartingPosition(GroundConstants.startingPosition) //setting position of relative encoder
   // Length and mass of your arm for sim.
-  .withLength(Meters.of(0.3511296))
-  .withMass(Pounds.of(8))
+  .withLength(GroundConstants.armLength)
+  .withMass(GroundConstants.armMass)
   // Telemetry name and verbosity for the arm.
-  .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
+  .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
+  .withHorizontalZero(GroundConstants.kHorizontalZero); 
 
-
- 
   // Arm Mechanism
   private Arm m_Arm = new Arm(armCfg);
 
- 
   /** Creates a new ExampleSubsystem. */
-  public IntakeArmSubsystem() {}
+  public IntakeArmSubsystem() {
+    sparkSmartMotorController.synchronizeRelativeEncoder();
+  }
+
 
    /**
    * Set the angle of the arm.
    * @param angle Angle to go to.
    */
-  public Command setAngle(Angle angle) 
-  { 
-    return m_Arm.setAngle(angle).until(m_Arm.isNear(angle, Degrees.of(Constants.OutakeConstants.kArmAllowableError)));
+  public Command setAngle(Angle angle) { 
+    //return m_Arm.setAngle(angle).until(m_Arm.isNear(angle, GroundConstants.kArmAllowableError));
+    return m_Arm.setAngle(angle);
   }
+
   /**
    * Move the arm up and down.
    * @param dutycycle [-1, 1] speed to set the arm too.
    */
-  public Command set(double dutycycle) { return m_Arm.set(dutycycle);}
+  public Command set(double dutycycle) { return m_Arm.set(dutycycle);} //sparkMaxController.getDutyCycle();
+  //DutyCycleEncoder m_encoderFR = new DutyCycleEncoder(0, 4.0, 2.0); 0-DIO channel 0
 
   /**
    * Run sysId on the {@link Arm}
    */
   public Command sysId() { return m_Arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
 
-  public Command setGround(){
-    return setAngle(Degrees.of(Setpoints.Arm.GroundIntake.intakeAngle));
+  public Command setGround() { return setAngle(Degrees.of(Setpoints.Arm.GroundIntake.intakeAngle));} // button triggers, intaking, stop, set pass, till around angle, pass
+
+  public Command setPass() { return setAngle(Degrees.of(Setpoints.Arm.GroundIntake.passAngle));} 
+
+  public boolean aroundAngle(double angle, double allowableError){
+    return MathUtil.isNear(angle, m_Arm.getAngle().in(Degrees), allowableError);
   }
-  public Command setPass(){
-    return setAngle(Degrees.of(Setpoints.Arm.GroundIntake.passAngle));
+  
+  public boolean aroundAngle(double angle){
+    return MathUtil.isNear(angle, m_Arm.getAngle().in(Degrees), GroundConstants.kArmAllowableError.in(Degrees));
   }
+
+  public boolean aroundGround(){ return aroundAngle(Setpoints.Arm.GroundIntake.intakeAngle);} //.until(()->intakeArmSubsystem.aroundAngle(0)));
+
+  public boolean aroundPass(){ return aroundAngle(Setpoints.Arm.GroundIntake.intakeAngle);}
+
+  // public Command hold(){return null;}
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
@@ -143,4 +161,5 @@ public class IntakeArmSubsystem extends SubsystemBase {
 /*
  * Things to be done
  * Tuning
+ * LaserCan
  */

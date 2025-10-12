@@ -36,6 +36,7 @@ import frc.robot.systems.TargetingSystem;
 import frc.robot.systems.TargetingSystem.ReefBranchLevel;
 import frc.robot.Constants.CanIDs;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.OutakeConstants;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
@@ -98,7 +99,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
   
   public Command setAngle(Angle angle) 
   { 
-    return arm.setAngle(angle).until(arm.isNear(angle, Degrees.of(Constants.OutakeConstants.kArmAllowableError)));
+    return arm.setAngle(angle).until(arm.isNear(angle, OutakeConstants.kArmAllowableError));
   }
   public Command set(double dutycycle)
   {

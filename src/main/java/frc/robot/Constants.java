@@ -5,10 +5,12 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
@@ -76,12 +78,39 @@ public final class ElevatorConstants {
   
 }
 public static class GroundConstants {
+  public static final double kP = 100;
+  public static final double kI = 0;
+  public static final double kD = 0;
+  public static final double ksimP = 100;
+  public static final double ksimI = 0;
+  public static final double ksimD = 0;
 
+  public static final double kS = 0;
+  public static final double kG = 0;
+  public static final double kV = 0;
+  public static final double ksimS = 0;
+  public static final double ksimG = 0;
+  public static final double ksimV = 0;
+
+  public static final int gearbox = 28;
+  public static final Current statorCurrentLimit = Amps.of(40);
+
+  public static final Angle softLimitMin = Degrees.of(5);
+  public static final Angle softLimitMax = Degrees.of(150);
+  public static final Angle hardLimitMin = Degrees.of(5);
+  public static final Angle hardLimitMax = Degrees.of(150);
+  public static final Distance armLength = Meters.of(0.3511296);
+  public static final Mass armMass =  Pounds.of(8);
   
+  public static final Angle startingPosition = Degrees.of(150); // setting position of relative encoder
+  public static final Angle kHorizontalZero = Degrees.of(15);// Parallel to the ground at 15deg - setting position of absolute
+  public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
 }
 public static class OutakeConstants {
-
-  public static final double kArmAllowableError = RobotBase.isSimulation() ? 0.01 : 4 ;
+  
+  public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
+  public static final Angle kArmHP = Degrees.of(145);
+  public static final Angle kHorizontalZero = Degrees.of(15); // Parallel to the ground at 15deg
 
   
 }
