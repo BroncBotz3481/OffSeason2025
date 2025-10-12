@@ -109,6 +109,9 @@ public class OutakeArmSubsystem extends SubsystemBase {
      return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));
     }
 
+  public Trigger isLoaded(){
+    return null;
+  }
 
    /**
    * Gets the height of the elevator and compares it to the given height with the given tolerance.
