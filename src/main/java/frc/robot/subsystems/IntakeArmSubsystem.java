@@ -131,7 +131,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
   public boolean aroundPass(){ return aroundAngle(Setpoints.Arm.GroundIntake.intakeAngle);}
 
-  // public Command hold(){return null;}
+  public Command hold(){return setAngle(m_Arm.getAngle()).repeatedly();}
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).

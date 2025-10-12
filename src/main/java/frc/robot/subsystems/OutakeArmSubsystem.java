@@ -109,6 +109,8 @@ public class OutakeArmSubsystem extends SubsystemBase {
      return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));
     }
 
+  public Command hold(){return setAngle(arm.getAngle()).repeatedly();}
+
   public Trigger isLoaded(){
     return null;
   }

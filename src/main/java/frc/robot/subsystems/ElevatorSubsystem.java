@@ -128,6 +128,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     m_elevator.simIterate();
   }
 
+
+
   private Trigger atHeight(double height, double tolerance) {
     return new Trigger(() -> MathUtil.isNear(height,
                               getHeightMeters(),
@@ -170,6 +172,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return m_elevator.setHeight(Units.Inches.of(heightInInches))
                      .until(atHeight(getHeightMeters(), ElevatorConstants.kElevatorAllowableError));
   }
+
+  // public void hold(){
+  //   return m_elevator.setHeight(m_elevator.getHeight());
+  // }
 
   /**
    * Move the elevator up and down.
