@@ -91,9 +91,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   private Arm m_Arm = new Arm(armCfg);
 
   /** Creates a new ExampleSubsystem. */
-  public IntakeArmSubsystem() {
-    sparkSmartMotorController.synchronizeRelativeEncoder();
-  }
+  public IntakeArmSubsystem() {sparkSmartMotorController.synchronizeRelativeEncoder(); }
 
 
    /**

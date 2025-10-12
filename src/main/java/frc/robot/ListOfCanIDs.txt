@@ -1,15 +1,15 @@
 1. FrontLeft Drive
 2. FrontLeft Angle
-3. FrontLeft Encoder
-4. FrontRight Drive
-5. FrontRight Angle
-6. FrontRight Encoder
-7. BackLeft Drive
-8. BackLeft Angle
-9. BackLeft Encoder
-10.BackRight Drive
-11.BackRight Angle
-12.BackRight Encoder
+
+3. FrontRight Drive
+4. FrontRight Angle
+
+5. BackLeft Drive
+6. BackLeft Angle
+
+7.BackRight Drive
+8.BackRight Angle
+
 
 13-Elevator
 14-ElevatorFollower

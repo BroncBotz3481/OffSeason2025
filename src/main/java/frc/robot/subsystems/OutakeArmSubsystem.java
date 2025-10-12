@@ -93,7 +93,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
   private Arm arm = new Arm(armCfg);
 
   /** Creates a new ExampleSubsystem. */
-  public OutakeArmSubsystem() {}
+  public OutakeArmSubsystem() { sparkSmartMotorController.synchronizeRelativeEncoder();}
 
   
   
