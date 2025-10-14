@@ -164,7 +164,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return m_elevator.getHeight().in(Meters);
   }
 
-                                /**
+ /**
    * Set the height of the elevator.
    * @param angle Distance to go to.
    */

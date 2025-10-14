@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Setpoints;
+import frc.robot.Setpoints.Arm.OuttakeArm;
 import frc.robot.Setpoints.Elevator.Coral;
 import frc.robot.systems.TargetingSystem;
 import frc.robot.systems.TargetingSystem.ReefBranchLevel;
@@ -74,6 +75,8 @@ public class OutakeArmSubsystem extends SubsystemBase {
   .withUseExternalFeedbackEncoder(true)
   .withZeroOffset(Degrees.of(0));
 
+  
+
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNeoVortex(1), smcConfig);
   
  private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
@@ -99,7 +102,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
   
   public Command setAngle(Angle angle) 
   { 
-    return arm.setAngle(angle).until(arm.isNear(angle, OutakeConstants.kArmAllowableError));
+    return arm.setAngle(angle).until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
   }
   public Command set(double dutycycle)
   {
@@ -135,7 +138,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
    */
   public boolean aroundAngle(double angle)
   {
-    return aroundAngle(angle, ElevatorConstants.kElevatorAllowableError);
+    return aroundAngle(angle, Constants.OutakeConstants.kArmAllowableError);
   }
 
   public Command L1 (){
@@ -149,6 +152,10 @@ public class OutakeArmSubsystem extends SubsystemBase {
   }
   public Command L4 (){
     return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L4));
+  }
+
+  public Command pass(){
+    return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.passAngle));
   }
 
 public Command getCoralCommand(TargetingSystem targetingSystem)

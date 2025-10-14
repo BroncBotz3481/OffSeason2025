@@ -16,12 +16,14 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,6 +34,7 @@ import frc.robot.Constants.GroundConstants;
 import frc.robot.Setpoints.Arm.GroundIntake;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ArmConfig;
+import yams.mechanisms.config.SensorConfig;
 import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
@@ -39,12 +42,15 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.simulation.Sensor;
 
 public class IntakeArmSubsystem extends SubsystemBase {
 
 
   // Vendor motor controller object
   private SparkMax m_motor = new SparkMax(CanIDs.IntakeArm, MotorType.kBrushless);
+
+
 
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
@@ -92,7 +98,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public IntakeArmSubsystem() {sparkSmartMotorController.synchronizeRelativeEncoder(); }
-
+ 
 
    /**
    * Set the angle of the arm.

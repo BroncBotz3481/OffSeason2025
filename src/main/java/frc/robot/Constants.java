@@ -108,7 +108,7 @@ public static class GroundConstants {
 }
 public static class OutakeConstants {
   
-  public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
+  public static final double kArmAllowableError = RobotBase.isSimulation() ? 0.01 : 4;
   public static final Angle kArmHP = Degrees.of(145);
   public static final Angle kHorizontalZero = Degrees.of(15); // Parallel to the ground at 15deg
 
