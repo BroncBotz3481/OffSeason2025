@@ -197,6 +197,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return run(() -> m_motor.set(d));
   }
   
+  public Command toMin()
+  {
+    return setPower(-0.1).until(m_elevator.min());
+  }
   public Command CoralL1()
   {
     return setPower(-0.1).until(m_elevator.min());

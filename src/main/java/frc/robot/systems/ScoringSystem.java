@@ -21,7 +21,7 @@ public class ScoringSystem
   private SwerveSubsystem      m_swerve;
   private IntakeRollerSubsystem m_intakeRoller;
   private OutakeRollerSubsystem m_outakeRoller;
-  private SwerveInputStream    m_swerveInputStream;
+  private SwerveInputStream m_swerveInputStream;
   private LoadingSystem        m_loadingSystem;
   private TargetingSystem      m_targetSystem;
 
@@ -46,8 +46,7 @@ public class ScoringSystem
   /// intact.
   public Command scoreCoralAuto()
   {
-    return m_swerve.stopDrivingCommand().andThen(Commands.parallel(
-           m_elevator.getCoralCommand(m_targetSystem).repeatedly(), m_outake.getCoralCommand(m_targetSystem).repeatedly()));
+    return null;
   }
 
   public Command restArmsSafe()
@@ -58,7 +57,13 @@ public class ScoringSystem
   public Command scoreCoral()
   {
     // Arm down, elevator down, drive backwards x in
-    return null;
+    return m_swerve.stopDrivingCommand().andThen(Commands.parallel(
+      m_elevator.getCoralCommand(m_targetSystem).repeatedly(), m_outake.getCoralCommand(m_targetSystem).repeatedly()) 
+       .until(m_elevator.atCoralHeight(m_targetSystem).and(m_outake.atCoralAngle(m_targetSystem))))
+       .withDeadline(m_targetSystem.driveToCoralTarget(m_swerve))
+                               .andThen(m_outakeRoller.out().withTimeout(1.5))
+                               .andThen(m_swerve.driveBackwards().alongWith(m_elevator.toMin(),m_outake.pass()).withTimeout(0.5));
+                               
   }
 
 

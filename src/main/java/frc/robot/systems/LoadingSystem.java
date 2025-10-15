@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Degrees;
 
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 
+import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -52,7 +54,7 @@ public class LoadingSystem
     m_swerveInputStream = driveStream;
   }
 
-  private Canandcolor m_canAndColor = new Canandcolor(19);
+  private LaserCan m_LaserCan = new LaserCan(19);
 
   public Command coralLoad()
   {
@@ -76,16 +78,16 @@ public class LoadingSystem
     return null;
   }
 
-  private DigitalInput dio = new DigitalInput(0); 
-  private final Sensor coralSensor = new SensorConfig("CoralCanAndCOlor") 
-  .withField("Proximity", m_canAndColor::getProximity, 0.0) 
-  .withSimulatedValue("Proximity",(() ->m_outake.aroundAngle(Setpoints.Arm.OuttakeArm.passAngle, OutakeConstants.kArmAllowableError)), 1.0) // Change "Beam" field to true when the arm is near 40deg +- 2deg
-  .getSensor(); // Get the sensor.
+//   private DigitalInput dio = new DigitalInput(0); // Standard DIO
+//   private final Sensor laser = new SensorConfig("CoralDetectorBeamBreak") // Name of the sensor 
+//   .withField("Beam", m_laserCan::getMeasurement().distance_mm,233 ) // Add a Field to the sensor named "Beam" whose value is dio.get() and defaults to false
+//   .withSimulatedValue("beam",(() ->m_outake.aroundAngle(Setpoints.Arm.OuttakeArm.passAngle, OutakeConstants.kArmAllowableError)), 118) // Change "Beam" field to true when the arm is near 40deg +- 2deg
+//   .getSensor(); // Get the sensor.
 
-
-public boolean sensorDistance(){
-  return coralSensor.getAsDouble("Proximity") >= Setpoints.Arm.OuttakeArm.sensorDistanceThreshold; //MAKE SURE THERE IS NOTHING INFRONT OF THE SENSOR
-}
+// //double c = m_LaserCan.getMeasurement().distance_mm;
+// public boolean sensorDistance(){
+//   return laser.getAsDouble("beam") >= Setpoints.Arm.OuttakeArm.sensorDistanceThreshold; //MAKE SURE THERE IS NOTHING INFRONT OF THE SENSOR
+//}
 
 
  
