@@ -160,6 +160,10 @@ public class IntakeArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
     m_Arm.simIterate();
   }
+
+  public Angle getAngle() {
+    return m_Arm.getAngle();
+  }
 }
 
 /*

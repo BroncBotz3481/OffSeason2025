@@ -15,6 +15,8 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Unit;
 import java.lang.management.MemoryType;
 import java.util.Map;
 
@@ -215,5 +217,9 @@ public Command getCoralCommand(TargetingSystem targetingSystem)
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
     arm.simIterate();
+  }
+
+  public Angle getAngle() {
+    return arm.getAngle();
   }
 }
