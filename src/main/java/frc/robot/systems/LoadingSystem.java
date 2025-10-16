@@ -41,6 +41,10 @@ public class LoadingSystem
       .getSensor();
   private Sensor                m_intakeSensor;
 
+  Angle loadingAngle        = Degrees.of(-5);
+  Angle intakeTransferAngle = Degrees.of(95);
+  Angle outakeTransferAngle = Degrees.of(105);
+  boolean hasCoral = false;
 
   public LoadingSystem(IntakeArmSubsystem intake, ElevatorSubsystem elevator, SwerveSubsystem swerve,
                        OutakeArmSubsystem outake, IntakeRollerSubsystem intakeRoller,
@@ -59,20 +63,22 @@ public class LoadingSystem
     m_intakeSensor = new SensorConfig("IntakeRoller")
         .withField("Current", () -> intakeRoller.getCurrent().in(Amps), 0.0)
         .getSensor();
+    new Trigger(()->m_intakeSensor.getAsDouble("Current")>= 40).onTrue(Commands.runOnce(()->hasCoral=true));
+    new Trigger(()->m_intakeRoller.getDutycycle() > 0.0).onTrue(Commands.runOnce(()->hasCoral=false));
+
+    new Trigger(()->m_intake.aroundAngle(intakeTransferAngle.in(Degrees),1) && m_outake.aroundAngle(outakeTransferAngle.in(Degrees),1) && hasCoral)
+        .onTrue(coralTransfer());
     if (Robot.isSimulation())
     {setupSimulation();}
   }
 
   public void setupSimulation()
   {
-    Angle loadingAngle        = Degrees.of(-5);
-    Angle intakeTransferAngle = Degrees.of(95);
-    Angle outakeTransferAngle = Degrees.of(105);
     new Trigger(() -> m_intake.getAngle().lte(Degrees.of(-5)))
-        .onTrue(Commands.runOnce(() -> m_intakeSensor.getField("Current").set(SensorData.convert(40.0))));
+        .onTrue(Commands.runOnce(() -> m_intakeSensor.getField("Current").set(SensorData.convert(30.0))));
     new Trigger(() -> m_intake.getAngle().isNear(intakeTransferAngle, Degrees.of(1)) &&
                       m_outake.getAngle().isNear(outakeTransferAngle, Degrees.of(1)) &&
-                      m_intakeRoller.getDutycycle() < 0.0)
+                      m_intakeRoller.getDutycycle() > 0.0)
         .onTrue(Commands.runOnce(() -> {
           m_intakeSensor.getField("Current").set(SensorData.convert(0));
           m_endEffectorLaserCanSensor.getField("EndEffectorLaserCan").set(SensorData.convert(5));
@@ -83,8 +89,15 @@ public class LoadingSystem
   public Command coralLoad()
   {
 
-    return m_intake.setGround().repeatedly().alongWith(m_intakeRoller.in().repeatedly());
+    return m_intake.setGround().repeatedly().alongWith(m_intakeRoller.in().repeatedly())
+                   .until(() ->m_intakeSensor.getAsDouble("Current") >= 30);
 
+  }
+
+  public Command coralTransfer()
+  {
+    return m_intakeRoller.setAlgaeIntakeRoller(11).alongWith(m_outakeRoller.setAlgaeIntakeRoller(-1))
+                         .until(()->m_endEffectorLaserCanSensor.getAsDouble("EndEffectorLaserCan") >= 5);
   }
 
   public Command coralLoadAuto()
