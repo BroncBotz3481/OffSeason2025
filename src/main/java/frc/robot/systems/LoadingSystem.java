@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.Constants.GroundConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -96,7 +97,7 @@ public class LoadingSystem
 
   public Command coralTransfer()
   {
-    return m_intakeRoller.setAlgaeIntakeRoller(11).alongWith(m_outakeRoller.setAlgaeIntakeRoller(-1))
+    return m_intakeRoller.out().alongWith(m_outakeRoller.in())
                          .until(()->m_endEffectorLaserCanSensor.getAsDouble("EndEffectorLaserCan") >= 5);
   }
 

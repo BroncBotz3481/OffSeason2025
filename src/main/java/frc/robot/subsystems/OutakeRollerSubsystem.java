@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDs;
+import frc.robot.Constants.IntakeConstants;
 
 
 public class OutakeRollerSubsystem extends SubsystemBase
@@ -75,22 +76,23 @@ public class OutakeRollerSubsystem extends SubsystemBase
     }
   
   
-    public Command setAlgaeIntakeRoller(double speed)
-    {
-      return run(() -> {
-        m_rollerMotor.set(speed);
-      });
-    }
-  
-    public Command out()
-    {
-      return setAlgaeIntakeRoller(1);
+ public Command setIntakeRoller(double speed)
+  {
+    return run(() -> {
+      m_rollerMotor.set(speed);
+    });
+  }
+
+  public Command out()
+  {
+    return setIntakeRoller(IntakeConstants.kRollerSpeed);
   }
 
   public Command in()
   {
-    return setAlgaeIntakeRoller(-1);
+    return setIntakeRoller(-IntakeConstants.kRollerSpeed);
   }
+
 
 
 

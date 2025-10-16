@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDs;
+import frc.robot.Constants.IntakeConstants;
 
 
 public class IntakeRollerSubsystem extends SubsystemBase
@@ -74,7 +75,7 @@ public class IntakeRollerSubsystem extends SubsystemBase
   }
 
 
-  public Command setAlgaeIntakeRoller(double speed)
+  public Command setIntakeRoller(double speed)
   {
     return run(() -> {
       m_rollerMotor.set(speed);
@@ -83,12 +84,12 @@ public class IntakeRollerSubsystem extends SubsystemBase
 
   public Command out()
   {
-    return setAlgaeIntakeRoller(1);
+    return setIntakeRoller(IntakeConstants.kRollerSpeed);
   }
 
   public Command in()
   {
-    return setAlgaeIntakeRoller(-1);
+    return setIntakeRoller(-IntakeConstants.kRollerSpeed);
   }
 
   public Current getCurrent()
