@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.Constants.GroundConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -64,14 +65,18 @@ public class LoadingSystem
     m_intakeSensor = new SensorConfig("IntakeRoller")
         .withField("Current", () -> intakeRoller.getCurrent().in(Amps), 0.0)
         .getSensor();
-    new Trigger(()->m_intakeSensor.getAsDouble("Current")>= 40).onTrue(Commands.runOnce(()->hasCoral=true));
+    //When the coral intake sucks in coral and current drops, sets isLoaded true for 0.5
+    new Trigger(()->m_intakeSensor.getAsDouble("Current")>= IntakeConstants.kCurrentLoaded).debounce(0.5).onTrue(Commands.runOnce(()->hasCoral=true));
     new Trigger(()->m_intakeRoller.getDutycycle() > 0.0).onTrue(Commands.runOnce(()->hasCoral=false));
 
-    new Trigger(()->m_intake.aroundAngle(intakeTransferAngle.in(Degrees),1) && m_outake.aroundAngle(outakeTransferAngle.in(Degrees),1) && hasCoral)
+    new Trigger(()->m_intake.aroundAngle(intakeTransferAngle.in(Degrees)) && m_outake.aroundAngle(outakeTransferAngle.in(Degrees)) && hasCoral)
         .onTrue(coralTransfer());
     if (Robot.isSimulation())
     {setupSimulation();}
   }
+
+  
+
 
   public void setupSimulation()
   {
@@ -91,7 +96,7 @@ public class LoadingSystem
   {
 
     return m_intake.setGround().repeatedly().alongWith(m_intakeRoller.in().repeatedly())
-                   .until(() ->m_intakeSensor.getAsDouble("Current") >= 30);
+                   .until(() ->m_intakeSensor.getAsDouble("Current") >= IntakeConstants.kCurrentLoaded);
 
   }
 

@@ -118,6 +118,7 @@ public static class OutakeConstants {
 
 public static class IntakeConstants{
   public static final double kRollerSpeed = 0.8;
+  public static double kCurrentLoaded = 50;
 }
   
 }
