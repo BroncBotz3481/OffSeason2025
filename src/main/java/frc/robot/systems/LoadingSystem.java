@@ -35,7 +35,6 @@ public class LoadingSystem
   private IntakeRollerSubsystem m_intakeRoller;
   private OutakeRollerSubsystem m_outakeRoller;
   private SwerveInputStream     m_swerveInputStream;
-  private LoadingSystem         m_loadingSystem;
   private TargetingSystem       m_targetSystem;
   private LaserCan              m_endEffectorLaserCAN       = new LaserCan(19);
   private Sensor                m_endEffectorLaserCanSensor = new SensorConfig("EndEffectorLaserCAN")
@@ -51,13 +50,12 @@ public class LoadingSystem
   public LoadingSystem(IntakeArmSubsystem intake, ElevatorSubsystem elevator, SwerveSubsystem swerve,
                        OutakeArmSubsystem outake, IntakeRollerSubsystem intakeRoller,
                        OutakeRollerSubsystem outakeRoller,
-                       LoadingSystem loading, TargetingSystem targeting, SwerveInputStream driveStream)
+                       TargetingSystem targeting, SwerveInputStream driveStream)
   {
     m_intake = intake;
     m_elevator = elevator;
     m_swerve = swerve;
     m_outake = outake;
-    m_loadingSystem = loading;
     m_intakeRoller = intakeRoller;
     m_targetSystem = targeting;
     m_outakeRoller = outakeRoller;
@@ -87,7 +85,7 @@ public class LoadingSystem
                       m_intakeRoller.getDutycycle() > 0.0)
         .onTrue(Commands.runOnce(() -> {
           m_intakeSensor.getField("Current").set(SensorData.convert(0));
-          m_endEffectorLaserCanSensor.getField("EndEffectorLaserCan").set(SensorData.convert(5));
+          m_endEffectorLaserCanSensor.getField("EndEffectorLaserCan").set(SensorData.convert(IntakeConstants.kLaserSenseDistancemm));
         }));
   }
 
@@ -103,7 +101,7 @@ public class LoadingSystem
   public Command coralTransfer()
   {
     return m_intakeRoller.out().alongWith(m_outakeRoller.in())
-                         .until(()->m_endEffectorLaserCanSensor.getAsDouble("EndEffectorLaserCan") >= 5);
+                         .until(()->m_endEffectorLaserCanSensor.getAsDouble("EndEffectorLaserCan") >= IntakeConstants.kLaserSenseDistancemm);
   }
 
   public Command coralLoadAuto()
@@ -120,16 +118,6 @@ public class LoadingSystem
     return null;
   }
 
-//   private DigitalInput dio = new DigitalInput(0); // Standard DIO
-//   private final Sensor laser = new SensorConfig("CoralDetectorBeamBreak") // Name of the sensor 
-//   .withField("Beam", m_laserCan::getMeasurement().distance_mm,233 ) // Add a Field to the sensor named "Beam" whose value is dio.get() and defaults to false
-//   .withSimulatedValue("beam",(() ->m_outake.aroundAngle(Setpoints.Arm.OuttakeArm.passAngle, OutakeConstants.kArmAllowableError)), 118) // Change "Beam" field to true when the arm is near 40deg +- 2deg
-//   .getSensor(); // Get the sensor.
-
-// //double c = m_LaserCan.getMeasurement().distance_mm;
-// public boolean sensorDistance(){
-//   return laser.getAsDouble("beam") >= Setpoints.Arm.OuttakeArm.sensorDistanceThreshold; //MAKE SURE THERE IS NOTHING INFRONT OF THE SENSOR
-//}
 
 
 }

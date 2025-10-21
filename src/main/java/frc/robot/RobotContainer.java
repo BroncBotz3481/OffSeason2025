@@ -5,10 +5,14 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Setpoints.Arm.GroundIntake;
+import frc.robot.Setpoints.Arm.OuttakeArm;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.OutakeArmSubsystem;
+import frc.robot.subsystems.OutakeRollerSubsystem;
 import swervelib.SwerveInputStream;
 
 import static edu.wpi.first.units.Units.Degree;
@@ -16,9 +20,14 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.systems.LoadingSystem;
+import frc.robot.systems.ScoringSystem;
+import frc.robot.systems.TargetingSystem;
+import frc.robot.systems.TargetingSystem.ReefBranchLevel;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,14 +38,12 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final SwerveSubsystem drivebase = new SwerveSubsystem();//Remember to add new swerve.json
-  private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
-  private final OutakeArmSubsystem outakeArmSubsystem = new OutakeArmSubsystem();
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  private final SwerveSubsystem drivebase = new SwerveSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  private final SwerveSubsystem drivebase = new SwerveSubsystem();
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> m_driverController.getLeftY()*-1,
@@ -65,6 +72,16 @@ public class RobotContainer {
 
   Command driveRobotOrientedAngularVelocity = drivebase.drive(driveAngularVelocity);
 
+
+  private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
+  private final OutakeArmSubsystem outakeArmSubsystem = new OutakeArmSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final IntakeRollerSubsystem groundRollers = new IntakeRollerSubsystem();
+  private final OutakeRollerSubsystem outtakeRollers = new OutakeRollerSubsystem();
+  private final TargetingSystem targetingSystem = new TargetingSystem();
+  private final LoadingSystem loadingSystem = new LoadingSystem(intakeArmSubsystem, elevatorSubsystem, drivebase, outakeArmSubsystem, groundRollers, outtakeRollers, targetingSystem, driveAngularVelocity);
+  private final ScoringSystem scoringSystem = new ScoringSystem(intakeArmSubsystem, elevatorSubsystem, drivebase, outakeArmSubsystem, groundRollers, outtakeRollers, loadingSystem, targetingSystem, driveAngularVelocity); 
+
                                                                
  /** The container for the robot. Contains subsystems, OI devices, and commands. */
  public RobotContainer() {
@@ -76,9 +93,9 @@ public class RobotContainer {
 
 }
 public void defaultCommands(){
-  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Degrees.of(150)));
-  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(Degrees.of(-15)));
-  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.setElevatorHeight(67));
+  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Degrees.of(GroundIntake.intakeAngle)));
+  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(Degrees.of(OuttakeArm.passAngle)));
+  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.hold());
   drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
   
 }
@@ -97,12 +114,44 @@ public void defaultCommands(){
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
-    m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Degrees.of(45)));
-    m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Degrees.of(20)));
-    m_driverController.button(3).whileTrue(outakeArmSubsystem.setAngle(Degrees.of(25)));
-    m_driverController.button(4).whileTrue(outakeArmSubsystem.setAngle(Degrees.of(-25)));
-    m_driverController.button(5).whileTrue(elevatorSubsystem.setElevatorHeight(148));
+    m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
+    m_driverController.button(2).whileTrue(loadingSystem.coralTransfer());
+    m_driverController.button(3).whileTrue(scoringSystem.scoreCoral());
+    m_driverController.button(4).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()).andThen(scoringSystem.scoreCoral()));
 
+    m_driverController.button(1).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+                                                         .andThen(Commands.runOnce(() ->
+                                                                                       drivebase.getSwerveDrive().field.getObject(
+                                                                                           "target").setPose(
+                                                                                           targetingSystem.getCoralTargetPose())))
+                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L1))
+                                         );
+      //L2 Score Coral
+      m_driverController.button(1).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+                                                         .andThen(Commands.runOnce(() ->
+                                                                                       drivebase.getSwerveDrive().field.getObject(
+                                                                                           "target").setPose(
+                                                                                           targetingSystem.getCoralTargetPose())))
+
+                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L2))
+                                         );
+      //L3 Score Coral
+      m_driverController.button(1).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+                                                         .andThen(Commands.runOnce(() ->
+                                                                                       drivebase.getSwerveDrive().field.getObject(
+                                                                                           "target").setPose(
+                                                                                           targetingSystem.getCoralTargetPose())))
+
+                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L3))
+                                         );
+      //L4 Score Coral
+      m_driverController.button(1).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+                                                         .andThen(Commands.runOnce(() ->
+                                                                                       drivebase.getSwerveDrive().field.getObject(
+                                                                                           "target").setPose(
+                                                                                           targetingSystem.getCoralTargetPose())))
+                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L4))
+                                         );
   }
 
   /**

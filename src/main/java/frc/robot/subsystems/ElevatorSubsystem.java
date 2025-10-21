@@ -220,6 +220,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return setElevatorHeight(Setpoints.Elevator.Coral.L4);
   }
 
+  public Command hold(){
+    return m_elevator.setHeight(m_elevator.getHeight()).repeatedly();
+  }
+
 public Command getCoralCommand(TargetingSystem targetingSystem)
   {
     return Commands.select(Map.of(ReefBranchLevel.L1, CoralL1(),
@@ -253,6 +257,7 @@ public Command getCoralCommand(TargetingSystem targetingSystem)
       return false;
     });
   
+
   }
 }
 
