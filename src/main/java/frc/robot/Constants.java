@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int kDriverControllerPort = 1;
     public static final double DEADBAND = 0.5;
   }
   public static final double              maxSpeed      = 7; //meters per second

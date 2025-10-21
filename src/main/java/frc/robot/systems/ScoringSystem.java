@@ -60,7 +60,7 @@ public class ScoringSystem
     return m_swerve.stopDrivingCommand().andThen(Commands.parallel(
       m_elevator.getCoralCommand(m_targetSystem).repeatedly(), m_outake.getCoralCommand(m_targetSystem).repeatedly()) 
        .until(m_elevator.atCoralHeight(m_targetSystem).and(m_outake.atCoralAngle(m_targetSystem))))
-       .withDeadline(m_targetSystem.driveToCoralTarget(m_swerve))
+       .andThen(m_targetSystem.driveToCoralTarget(m_swerve))
                                .andThen(m_outakeRoller.out().withTimeout(1.5))
                                .andThen(m_swerve.driveBackwards().alongWith(m_elevator.toMin(),m_outake.pass()).withTimeout(0.5));
                                

@@ -119,7 +119,7 @@ public void defaultCommands(){
     m_driverController.button(3).whileTrue(scoringSystem.scoreCoral());
     m_driverController.button(4).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()).andThen(scoringSystem.scoreCoral()));
 
-    m_driverController.button(1).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+    m_driverController.button(5).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
                                                          .andThen(Commands.runOnce(() ->
                                                                                        drivebase.getSwerveDrive().field.getObject(
                                                                                            "target").setPose(
@@ -127,7 +127,7 @@ public void defaultCommands(){
                                                          .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L1))
                                          );
       //L2 Score Coral
-      m_driverController.button(1).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+      m_driverController.button(6).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
                                                          .andThen(Commands.runOnce(() ->
                                                                                        drivebase.getSwerveDrive().field.getObject(
                                                                                            "target").setPose(
@@ -136,7 +136,7 @@ public void defaultCommands(){
                                                          .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L2))
                                          );
       //L3 Score Coral
-      m_driverController.button(1).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+      m_driverController.button(7).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
                                                          .andThen(Commands.runOnce(() ->
                                                                                        drivebase.getSwerveDrive().field.getObject(
                                                                                            "target").setPose(
@@ -145,7 +145,7 @@ public void defaultCommands(){
                                                          .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L3))
                                          );
       //L4 Score Coral
-      m_driverController.button(1).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+      m_driverController.button(8).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
                                                          .andThen(Commands.runOnce(() ->
                                                                                        drivebase.getSwerveDrive().field.getObject(
                                                                                            "target").setPose(
