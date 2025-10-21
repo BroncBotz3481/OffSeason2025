@@ -9,8 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.Setpoints;
 import frc.robot.Constants.GroundConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Setpoints.Arm.GroundIntake;
+import frc.robot.Setpoints.Arm.OuttakeArm;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -41,11 +44,8 @@ public class LoadingSystem
       .withField("EndEffectorLaserCan", () -> m_endEffectorLaserCAN.getMeasurement().distance_mm, 1)
       .getSensor();
   private Sensor                m_intakeSensor;
+  private boolean               hasCoral; 
 
-  Angle loadingAngle        = Degrees.of(-5);
-  Angle intakeTransferAngle = Degrees.of(95);
-  Angle outakeTransferAngle = Degrees.of(105);
-  boolean hasCoral = false;
 
   public LoadingSystem(IntakeArmSubsystem intake, ElevatorSubsystem elevator, SwerveSubsystem swerve,
                        OutakeArmSubsystem outake, IntakeRollerSubsystem intakeRoller,
@@ -63,11 +63,15 @@ public class LoadingSystem
     m_intakeSensor = new SensorConfig("IntakeRoller")
         .withField("Current", () -> intakeRoller.getCurrent().in(Amps), 0.0)
         .getSensor();
+    hasCoral = false;
     //When the coral intake sucks in coral and current drops, sets isLoaded true for 0.5
-    new Trigger(()->m_intakeSensor.getAsDouble("Current")>= IntakeConstants.kCurrentLoaded).debounce(0.5).onTrue(Commands.runOnce(()->hasCoral=true));
+
+    
+    new Trigger(()->m_intakeSensor.getAsDouble("Current")>= IntakeConstants.kCurrentLoaded).debounce(0.5)
+    .onTrue(Commands.runOnce(()->hasCoral=true));
     new Trigger(()->m_intakeRoller.getDutycycle() > 0.0).onTrue(Commands.runOnce(()->hasCoral=false));
 
-    new Trigger(()->m_intake.aroundAngle(intakeTransferAngle.in(Degrees)) && m_outake.aroundAngle(outakeTransferAngle.in(Degrees)) && hasCoral)
+    new Trigger(()->m_intake.aroundAngle(GroundIntake.passAngle) && m_outake.aroundAngle(OuttakeArm.passAngle) && hasCoral)
         .onTrue(coralTransfer());
     if (Robot.isSimulation())
     {setupSimulation();}
@@ -80,8 +84,8 @@ public class LoadingSystem
   {
     new Trigger(() -> m_intake.getAngle().lte(Degrees.of(-5)))
         .onTrue(Commands.runOnce(() -> m_intakeSensor.getField("Current").set(SensorData.convert(30.0))));
-    new Trigger(() -> m_intake.getAngle().isNear(intakeTransferAngle, Degrees.of(1)) &&
-                      m_outake.getAngle().isNear(outakeTransferAngle, Degrees.of(1)) &&
+    new Trigger(() -> m_intake.getAngle().isNear(Degrees.of(GroundIntake.passAngle), Degrees.of(1)) &&
+                      m_outake.getAngle().isNear(Degrees.of(OuttakeArm.passAngle), Degrees.of(1)) &&
                       m_intakeRoller.getDutycycle() > 0.0)
         .onTrue(Commands.runOnce(() -> {
           m_intakeSensor.getField("Current").set(SensorData.convert(0));
