@@ -21,11 +21,11 @@ public class Setpoints
     public static class Coral
     {
 
-      public static double L1 = 0;
-      public static double L2 = 0.014;
-      public static double L3 = 0.014;
-      public static double L4 = 0.47;
-      public static double HP = 0;
+      public static double L1 = 0.925; // Guessessss
+      public static double L2 = 1.2;
+      public static double L3 = 1.4;
+      public static double L4 = 1.6;
+      public static double HP = 1.04;
     }
 
   }
@@ -37,10 +37,10 @@ public class Setpoints
     {
 
     public static double passAngle = 90;// TOtAl GuesS
-      public static double L1 = -15;
-      public static double L2 = -25;
-      public static double L3 = -25;
-      public static double L4 = -25;
+      public static double L1 = 50;
+      public static double L2 = -35;
+      public static double L3 = -35;
+      public static double L4 = -15;
     public static double sensorDistanceThreshold = 0.8;
     }
     public static class GroundIntake{
