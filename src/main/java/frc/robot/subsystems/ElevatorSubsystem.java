@@ -35,6 +35,8 @@ import frc.robot.systems.TargetingSystem;
 import frc.robot.systems.TargetingSystem.ReefBranchLevel;
 import frc.robot.Setpoints;
 import frc.robot.Setpoints.Elevator.Coral;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
@@ -77,7 +79,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(ElevatorConstants.gearbox)))
+  .withGearing(new MechanismGearing(new GearBox(ElevatorConstants.gearbox)))
   // Motor properties to prevent over currenting.
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
@@ -168,8 +170,8 @@ public class ElevatorSubsystem extends SubsystemBase {
    * Set the height of the elevator.
    * @param angle Distance to go to.
    */
-  public Command setElevatorHeight(double heightInInches) { 
-    return m_elevator.setHeight(Units.Inches.of(heightInInches))
+  public Command setElevatorHeight(double heightInMeters) { 
+    return m_elevator.setHeight(Units.Meters.of(heightInMeters))
                      .until(atHeight(getHeightMeters(), ElevatorConstants.kElevatorAllowableError));
   }
 
@@ -203,7 +205,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
   public Command CoralL1()
   {
-    return setPower(-0.1).until(m_elevator.min());
+    return setElevatorHeight(Setpoints.Elevator.Coral.L1);
   }
   public Command CoralL2()
   {

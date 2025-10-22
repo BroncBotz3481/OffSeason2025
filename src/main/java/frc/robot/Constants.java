@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 
@@ -64,17 +65,17 @@ public final class ElevatorConstants {
   public static final double ksimG = 0;
   public static final double ksimV = 0;
 
-  public static final int gearbox = 15;
+  public static final double[] gearbox = {15.0};
   public static final Current statorCurrentLimit = Amps.of(40);
   
   public static final Distance startingHeight = Meters.of(0);
-  public static final Distance hardLimitMin = Meters.of(0);
+  public static final Distance hardLimitMin = Meters.of(0.925);
   public static final Distance hardLimitMax = Meters.of(2.0658);
   public static final Mass mass = Pounds.of(28);
   public static final Distance absoluteOffset = Meters.of(0);
- public static final double   kElevatorAllowableError   = RobotBase.isSimulation() ? 
-                                                          Units.inchesToMeters(1)
-                                                          : 0.07;
+  public static final double  kElevatorAllowableError   = RobotBase.isSimulation() ? 
+                                                          Inches.of(1).in(Meters)
+                                                          : Meters.of(0.05).in(Meters);
   
 
 
