@@ -91,6 +91,10 @@ public class LoadingSystem {
         return getIntakeCurrent().getAsDouble() >= IntakeConstants.kCurrentLoaded;
     }
 
+    public boolean outtakeHasCoral() {
+        return getOuttakeCoralDistance().getAsDouble() >= IntakeConstants.kLaserSenseDistancemm;
+    }
+
     private Command simulateCoralIntake()
     {
         return Commands.runOnce(()->getIntakeCurrent().set(SensorData.convert(80.0)));
@@ -121,7 +125,7 @@ public class LoadingSystem {
 
     public Command coralTransfer() {
         return m_intakeRoller.out().alongWith(m_outakeRoller.in())
-                .until(() -> getOuttakeCoralDistance().getAsDouble() >= IntakeConstants.kLaserSenseDistancemm);
+                .until(this::outtakeHasCoral);
     }
 
     public Command coralLoadAuto() {

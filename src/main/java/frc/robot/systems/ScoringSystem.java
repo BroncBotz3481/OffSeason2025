@@ -2,6 +2,7 @@ package frc.robot.systems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -10,6 +11,7 @@ import frc.robot.subsystems.OutakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
+import static edu.wpi.first.units.Units.Seconds;
 
 
 public class ScoringSystem
@@ -54,15 +56,38 @@ public class ScoringSystem
     return null;
   }
 
+  public Trigger inScoringPosition()
+  {
+      return m_elevator.atCoralHeight(m_targetSystem).and(m_outake.atCoralAngle(m_targetSystem));
+  }
+
+  public Command applyTargetingState()
+  {
+      // Repeatedly set the elevator and outtake arm at the targetting system state.
+      return m_elevator.getCoralCommand(m_targetSystem).repeatedly()
+              .alongWith(m_outake.getCoralCommand(m_targetSystem).repeatedly());
+  }
+
+  public Command outtake()
+  {
+      return m_outakeRoller.out().withTimeout(Seconds.of(1.5));
+  }
+
+  public Command safeState()
+  {
+      return m_outake.pass().alongWith(m_elevator.toMin());
+  }
+
+
   public Command scoreCoral()
   {
     // Arm down, elevator down, drive backwards x in
     return m_swerve.stopDrivingCommand()
-      .andThen(m_elevator.getCoralCommand(m_targetSystem).repeatedly().alongWith(m_outake.getCoralCommand(m_targetSystem).repeatedly())) 
+      .andThen(applyTargetingState())
       .until(m_elevator.atCoralHeight(m_targetSystem).and(m_outake.atCoralAngle(m_targetSystem)))
-      .andThen(m_outake.hold().alongWith(m_elevator.hold(), m_targetSystem.driveToCoralTarget(m_swerve)))//.alongWith() ended when the last cmd ends
-      .andThen(m_outake.hold().alongWith(m_elevator.hold(), m_outakeRoller.out().withTimeout(1.5)))
-      .andThen(m_swerve.driveBackwards().alongWith(m_outake.pass(), m_elevator.toMin()));
+      .andThen(applyTargetingState().alongWith(m_targetSystem.driveToCoralTarget(m_swerve)))//.alongWith() ended when the last cmd ends
+      .andThen(applyTargetingState().alongWith(outtake()))
+      .andThen(m_swerve.driveBackwards().alongWith(safeState()));
   }
 
 
