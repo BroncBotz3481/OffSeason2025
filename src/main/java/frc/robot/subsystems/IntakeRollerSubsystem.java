@@ -84,7 +84,7 @@ public class IntakeRollerSubsystem extends SubsystemBase
 
   public Command out()
   {
-    return setIntakeRoller(IntakeConstants.kRollerSpeed);
+    return setIntakeRoller(IntakeConstants.kRollerSpeed).withName("Outtake");
   }
 
   public Command in()
@@ -97,6 +97,10 @@ public class IntakeRollerSubsystem extends SubsystemBase
     return Amps.of(m_rollerMotor.getOutputCurrent());
   }
 
+  public boolean outtaking()
+  {
+      return getDutycycle() > 0.0 || getCurrentCommand().getName().equals("Outtake");
+  }
 
   public double getDutycycle()
   {
