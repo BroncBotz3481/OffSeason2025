@@ -63,6 +63,7 @@ public class LoadingSystem {
             setupSimulation();
         }
     }
+    /// ----------------- Sensor Data ----------------- ///
 
     private SensorData getIntakeCurrent()
     {
@@ -74,14 +75,7 @@ public class LoadingSystem {
         return m_endEffectorLaserCanSensor.getField("EndEffectorLaserCan");
     }
 
-    private void setupAutoTransfer()
-    {
-        new Trigger(this::intakeHasCoral)
-                .debounce(0.5) // Only valid if true for 500ms or half a second
-                .onTrue(Commands.runOnce(() -> hasCoral = true)); // Set this.hasCoral to true.
-        new Trigger(m_intakeRoller::outtaking).onTrue(Commands.runOnce(() -> hasCoral = false)); // Set this.hasCoral to false when intake starts outtaking
-        new Trigger(this::readyToTransfer).onTrue(coralTransfer());
-    }
+    /// ----------------- Sensor Triggers/Events ----------------- ///
 
     private boolean readyToTransfer() {
         return m_intake.aroundPass() && m_outake.aroundPass() && hasCoral;
@@ -94,6 +88,8 @@ public class LoadingSystem {
     public boolean outtakeHasCoral() {
         return getOuttakeCoralDistance().getAsDouble() >= IntakeConstants.kLaserSenseDistancemm;
     }
+
+    /// ----------------- Sensor Data Simulation ----------------- ///
 
     private Command simulateCoralIntake()
     {
@@ -115,11 +111,25 @@ public class LoadingSystem {
                 .onTrue(simulateCoralPass());
     }
 
+    /// ----------------- System Commands ----------------- ///
+
+    /**
+     * Sets up the auto transfer of a coral based on sensor data.
+     */
+    private void setupAutoTransfer()
+    {
+        new Trigger(this::intakeHasCoral)
+                .debounce(0.5) // Only valid if true for 500ms or half a second
+                .onTrue(Commands.runOnce(() -> hasCoral = true)); // Set this.hasCoral to true.
+        new Trigger(m_intakeRoller::outtaking).onTrue(Commands.runOnce(() -> hasCoral = false)); // Set this.hasCoral to false when intake starts outtaking
+
+        new Trigger(this::readyToTransfer).onTrue(coralTransfer()); // <-- Automatically transfer the coral when ready to transfer
+    }
 
     public Command coralLoad() {
 
         return m_intake.setGround().alongWith(m_intakeRoller.in())
-                .until(() -> getIntakeCurrent().getAsDouble() >= IntakeConstants.kCurrentLoaded);
+                .until(this::intakeHasCoral);
 
     }
 

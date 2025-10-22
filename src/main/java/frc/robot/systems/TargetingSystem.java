@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 //then select what level we want
 // that go to the nearest side of the reef and load.
 
-
+/// Really this is just a state machine disguised as a System.
 public class TargetingSystem
 {
 
