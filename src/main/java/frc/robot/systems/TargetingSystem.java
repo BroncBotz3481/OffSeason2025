@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.Constants;
 import frc.robot.Setpoints.AutoScoring;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.systems.field.AllianceFlipUtil;
@@ -127,12 +128,12 @@ public class TargetingSystem
 
   public ReefBranchLevel getTargetBranchLevel()
   {
-    return targetBranchLevel;
+    return targetBranchLevel != null? targetBranchLevel: Constants.TargetConstants.defaultBranchLevel;
   }
 
   public ReefBranch getTargetBranch()
   {
-    return targetBranch;
+    return targetBranch != null? targetBranch: Constants.TargetConstants.defaultBranch;
   }
 
   public Command driveToCoralTarget(SwerveSubsystem swerveDrive)

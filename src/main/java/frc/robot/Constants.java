@@ -15,6 +15,9 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.systems.TargetingSystem.ReefBranch;
+import frc.robot.systems.TargetingSystem.ReefBranchLevel;
+import frc.robot.systems.TargetingSystem.ReefBranchSide;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -122,4 +125,9 @@ public static final double kLaserSenseDistancemm = 5;
   public static double kCurrentLoaded = 50;
 }
   
+public static class TargetConstants{
+  public static final ReefBranchLevel defaultBranchLevel = ReefBranchLevel.L4;
+  public static final ReefBranch defaultBranch = ReefBranch.A;
+  public static final ReefBranchSide defaultBranchSide = ReefBranchSide.LEFT;
+}
 }
