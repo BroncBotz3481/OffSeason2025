@@ -57,13 +57,12 @@ public class ScoringSystem
   public Command scoreCoral()
   {
     // Arm down, elevator down, drive backwards x in
-    return m_swerve.stopDrivingCommand().andThen(Commands.parallel(
-      m_elevator.getCoralCommand(m_targetSystem).repeatedly(), m_outake.getCoralCommand(m_targetSystem).repeatedly()) 
-       .until(m_elevator.atCoralHeight(m_targetSystem).and(m_outake.atCoralAngle(m_targetSystem))))
-       .andThen(m_targetSystem.driveToCoralTarget(m_swerve))
-                               .andThen(m_outakeRoller.out().withTimeout(1.5))
-                               .andThen(m_swerve.driveBackwards().alongWith(m_elevator.toMin(),m_outake.pass()).withTimeout(0.5));
-                               
+    return m_swerve.stopDrivingCommand()
+      .andThen(m_elevator.getCoralCommand(m_targetSystem).repeatedly().alongWith(m_outake.getCoralCommand(m_targetSystem).repeatedly())) 
+      .until(m_elevator.atCoralHeight(m_targetSystem).and(m_outake.atCoralAngle(m_targetSystem)))
+      .andThen(m_outake.hold().alongWith(m_elevator.hold(), m_targetSystem.driveToCoralTarget(m_swerve)))//.alongWith() ended when the last cmd ends
+      .andThen(m_outake.hold().alongWith(m_elevator.hold(), m_outakeRoller.out().withTimeout(1.5)))
+      .andThen(m_swerve.driveBackwards().alongWith(m_outake.pass(), m_elevator.toMin()));
   }
 
 
