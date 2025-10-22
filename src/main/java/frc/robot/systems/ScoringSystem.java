@@ -64,8 +64,8 @@ public class ScoringSystem
   public Command applyTargetingState()
   {
       // Repeatedly set the elevator and outtake arm at the targetting system state.
-      return m_elevator.getCoralCommand(m_targetSystem).repeatedly()
-              .alongWith(m_outake.getCoralCommand(m_targetSystem).repeatedly());
+      return m_elevator.getCoralCommand(m_targetSystem)
+              .alongWith(m_outake.getCoralCommand(m_targetSystem));
   }
 
   public Command outtake()
@@ -84,10 +84,10 @@ public class ScoringSystem
     // Arm down, elevator down, drive backwards x in
     return m_swerve.stopDrivingCommand()
       .andThen(applyTargetingState())
-      .until(m_elevator.atCoralHeight(m_targetSystem).and(m_outake.atCoralAngle(m_targetSystem)))
-      .andThen(applyTargetingState().alongWith(m_targetSystem.driveToCoralTarget(m_swerve)))//.alongWith() ended when the last cmd ends
-      .andThen(applyTargetingState().alongWith(outtake()))
-      .andThen(m_swerve.driveBackwards().alongWith(safeState()));
+      .until(inScoringPosition())
+      .andThen(m_targetSystem.driveToCoralTarget(m_swerve).deadlineFor(applyTargetingState()))
+      .andThen(outtake().deadlineFor(applyTargetingState()))
+      .andThen(m_swerve.driveBackwards().deadlineFor(safeState()));
   }
 
 

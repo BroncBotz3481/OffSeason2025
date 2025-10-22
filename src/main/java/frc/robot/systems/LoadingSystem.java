@@ -118,7 +118,7 @@ public class LoadingSystem {
 
     public Command coralLoad() {
 
-        return m_intake.setGround().repeatedly().alongWith(m_intakeRoller.in().repeatedly())
+        return m_intake.setGround().alongWith(m_intakeRoller.in())
                 .until(() -> getIntakeCurrent().getAsDouble() >= IntakeConstants.kCurrentLoaded);
 
     }
