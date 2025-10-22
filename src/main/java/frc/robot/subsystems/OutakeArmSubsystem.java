@@ -106,7 +106,8 @@ public class OutakeArmSubsystem extends SubsystemBase {
 
 
     public Command setAngle(Angle angle) {
-        return arm.setAngle(angle).until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
+        return arm.setAngle(angle);
+        //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
     }
 
     public Command set(double dutycycle) {

@@ -50,216 +50,208 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class ElevatorSubsystem extends SubsystemBase {
 
 
-  private SparkMax m_motor = new SparkMax(CanIDs.ElevatorMain, MotorType.kBrushless);
+    private SparkMax m_motor = new SparkMax(CanIDs.ElevatorMain, MotorType.kBrushless);
 
-  private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
-  .withControlMode(ControlMode.CLOSED_LOOP)
-  .withMechanismCircumference(ElevatorConstants.mechanismCircumference)
-  
-  .withClosedLoopController(ElevatorConstants.kP, 
-                            ElevatorConstants.kI, 
-                            ElevatorConstants.kD, 
-                            MetersPerSecond.of(0.5), 
-                            MetersPerSecondPerSecond.of(0.5))
-  
-  .withSimClosedLoopController(ElevatorConstants.ksimP, 
-                               ElevatorConstants.ksimI, 
-                               ElevatorConstants.ksimD, 
-                               MetersPerSecond.of(0.5), 
-                               MetersPerSecondPerSecond.of(0.5))
-  // Feedforward Constants
-  .withFeedforward(new ElevatorFeedforward(ElevatorConstants.kS, 
-                                           ElevatorConstants.kG,
-                                           ElevatorConstants.kV))
-                                           
-  .withSimFeedforward(new ElevatorFeedforward(ElevatorConstants.ksimS, 
-                                              ElevatorConstants.ksimG, 
-                                              ElevatorConstants.ksimV))
-  // Telemetry name and verbosity level
-  .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
-  // Gearing from the motor rotor to final shaft.
-  // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withGearing(new MechanismGearing(new GearBox(ElevatorConstants.gearbox)))
-  // Motor properties to prevent over currenting.
-  .withMotorInverted(false)
-  .withIdleMode(MotorMode.BRAKE)
-  .withStatorCurrentLimit(ElevatorConstants.statorCurrentLimit)
-  .withClosedLoopRampRate(Seconds.of(0.25))
-  .withOpenLoopRampRate(Seconds.of(0.25))
-  .withFollowers(Pair.of(new SparkMax(CanIDs.ElevatorFollower, MotorType.kBrushless), false));
+    private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
+            .withControlMode(ControlMode.CLOSED_LOOP)
+            .withMechanismCircumference(ElevatorConstants.mechanismCircumference)
 
+            .withClosedLoopController(ElevatorConstants.kP,
+                    ElevatorConstants.kI,
+                    ElevatorConstants.kD,
+                    MetersPerSecond.of(0.5),
+                    MetersPerSecondPerSecond.of(0.5))
 
-  // Vendor motor controller object
+            .withSimClosedLoopController(ElevatorConstants.ksimP,
+                    ElevatorConstants.ksimI,
+                    ElevatorConstants.ksimD,
+                    MetersPerSecond.of(0.5),
+                    MetersPerSecondPerSecond.of(0.5))
+            // Feedforward Constants
+            .withFeedforward(new ElevatorFeedforward(ElevatorConstants.kS,
+                    ElevatorConstants.kG,
+                    ElevatorConstants.kV))
 
-  // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(2), smcConfig);
-
-  private ElevatorConfig elevconfig = new ElevatorConfig(sparkSmartMotorController)
-      .withStartingHeight(ElevatorConstants.startingHeight)
-      .withHardLimits(ElevatorConstants.hardLimitMin, ElevatorConstants.hardLimitMax)
-      .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
-      .withMass(ElevatorConstants.mass);
-
-  //Elevator Mechanism
-  private Elevator m_elevator = new Elevator(elevconfig);
+            .withSimFeedforward(new ElevatorFeedforward(ElevatorConstants.ksimS,
+                    ElevatorConstants.ksimG,
+                    ElevatorConstants.ksimV))
+            // Telemetry name and verbosity level
+            .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
+            // Gearing from the motor rotor to final shaft.
+            // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
+            .withGearing(new MechanismGearing(new GearBox(ElevatorConstants.gearbox)))
+            // Motor properties to prevent over currenting.
+            .withMotorInverted(false)
+            .withIdleMode(MotorMode.BRAKE)
+            .withStatorCurrentLimit(ElevatorConstants.statorCurrentLimit)
+            .withClosedLoopRampRate(Seconds.of(0.25))
+            .withOpenLoopRampRate(Seconds.of(0.25))
+            .withFollowers(Pair.of(new SparkMax(CanIDs.ElevatorFollower, MotorType.kBrushless), false));
 
 
-  /** Creates a new ExampleSubsystem. */
-  public ElevatorSubsystem() {}
+    // Vendor motor controller object
+
+    // Create our SmartMotorController from our Spark and config with the NEO.
+    private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(2), smcConfig);
+
+    private ElevatorConfig elevconfig = new ElevatorConfig(sparkSmartMotorController)
+            .withStartingHeight(ElevatorConstants.startingHeight)
+            .withHardLimits(ElevatorConstants.hardLimitMin, ElevatorConstants.hardLimitMax)
+            .withTelemetry("Elevator", TelemetryVerbosity.HIGH)
+            .withMass(ElevatorConstants.mass);
+
+    //Elevator Mechanism
+    private Elevator m_elevator = new Elevator(elevconfig);
 
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    m_elevator.updateTelemetry();
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-    m_elevator.simIterate();
-  }
+    /**
+     * Creates a new ExampleSubsystem.
+     */
+    public ElevatorSubsystem() {
+    }
 
 
+    /**
+     * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+     *
+     * @return value of some boolean subsystem state, such as a digital sensor.
+     */
+    public boolean exampleCondition() {
+        // Query some boolean state, such as a digital sensor.
+        return false;
+    }
 
-  private Trigger atHeight(double height, double tolerance) {
-    return new Trigger(() -> MathUtil.isNear(height,
-                              getHeightMeters(),
-                              tolerance));
-                                }
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        m_elevator.updateTelemetry();
+    }
 
- /**
-   * Gets the height of the elevator and compares it to the given height with the given tolerance.
-   *
-   * @param height         Height in meters
-   * @param allowableError Tolerance in meters.
-   * @return Within that tolerance.
-   */
-  public boolean aroundHeight(double height, double allowableError)
-  {
-    return MathUtil.isNear(height, getHeightMeters(), allowableError);
-  }
-
-  /**
-   * Gets the height of the elevator and compares it to the given height with the given tolerance.
-   *
-   * @param height Height in meters
-   * @return Within that tolerance.
-   */
-  public boolean aroundHeight(double height)
-  {
-    return aroundHeight(height, ElevatorConstants.kElevatorAllowableError);
-  }
+    @Override
+    public void simulationPeriodic() {
+        // This method will be called once per scheduler run during simulation
+        m_elevator.simIterate();
+    }
 
 
-  private double getHeightMeters() {
-    return m_elevator.getHeight().in(Meters);
-  }
+    private Trigger atHeight(double height, double tolerance) {
+        return new Trigger(() -> MathUtil.isNear(height,
+                getHeightMeters(),
+                tolerance));
+    }
 
- /**
-   * Set the height of the elevator.
-   * @param angle Distance to go to.
-   */
-  public Command setElevatorHeight(double heightInMeters) { 
-    return m_elevator.setHeight(Units.Meters.of(heightInMeters))
-                     .until(atHeight(getHeightMeters(), ElevatorConstants.kElevatorAllowableError));
-  }
+    /**
+     * Gets the height of the elevator and compares it to the given height with the given tolerance.
+     *
+     * @param height         Height in meters
+     * @param allowableError Tolerance in meters.
+     * @return Within that tolerance.
+     */
+    public boolean aroundHeight(double height, double allowableError) {
+        return MathUtil.isNear(height, getHeightMeters(), allowableError);
+    }
 
-  // public void hold(){
-  //   return m_elevator.setHeight(m_elevator.getHeight());
-  // }
+    /**
+     * Gets the height of the elevator and compares it to the given height with the given tolerance.
+     *
+     * @param height Height in meters
+     * @return Within that tolerance.
+     */
+    public boolean aroundHeight(double height) {
+        return aroundHeight(height, ElevatorConstants.kElevatorAllowableError);
+    }
 
-  /**
-   * Move the elevator up and down.
-   * @param dutycycle [-1, 1] speed to set the elevator too.
-   */
-  public Command set(double dutycycle) { 
-    return m_elevator.set(dutycycle);
-  }
 
-  /**
-   * Run sysId on the {@link Elevator}
-   */
-  public Command sysId() { 
-    return m_elevator.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));
-  }
+    private double getHeightMeters() {
+        return m_elevator.getHeight().in(Meters);
+    }
 
-  public Command setPower(double d)
-  {
-    return run(() -> m_motor.set(d));
-  }
-  
-  public Command toMin()
-  {
-    return setPower(-0.1).until(m_elevator.min());
-  }
-  public Command CoralL1()
-  {
-    return setElevatorHeight(Setpoints.Elevator.Coral.L1);
-  }
-  public Command CoralL2()
-  {
-    return setElevatorHeight(Setpoints.Elevator.Coral.L2);
-  }
+    /**
+     * Set the height of the elevator.
+     *
+     * @param angle Distance to go to.
+     */
+    public Command setElevatorHeight(double heightInMeters) {
+        return m_elevator.setHeight(Units.Meters.of(heightInMeters));
+//                .until(atHeight(getHeightMeters(), ElevatorConstants.kElevatorAllowableError));
+    }
 
-  public Command CoralL3()
-  {
-    return setElevatorHeight(Setpoints.Elevator.Coral.L3);
-  }
+    // public void hold(){
+    //   return m_elevator.setHeight(m_elevator.getHeight());
+    // }
 
-  public Command CoralL4()
-  {
-    return setElevatorHeight(Setpoints.Elevator.Coral.L4);
-  }
+    /**
+     * Move the elevator up and down.
+     *
+     * @param dutycycle [-1, 1] speed to set the elevator too.
+     */
+    public Command set(double dutycycle) {
+        return m_elevator.set(dutycycle);
+    }
 
-  public Command hold(){
-    return m_elevator.setHeight(m_elevator.getHeight()).repeatedly();
-  }
+    /**
+     * Run sysId on the {@link Elevator}
+     */
+    public Command sysId() {
+        return m_elevator.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));
+    }
 
-public Command getCoralCommand(TargetingSystem targetingSystem)
-  {
-    return Commands.select(Map.of(ReefBranchLevel.L1, CoralL1(),
-                                  ReefBranchLevel.L2, CoralL2(),
-                                  ReefBranchLevel.L3, CoralL3(),
-                                  ReefBranchLevel.L4, CoralL4()),
-                           targetingSystem::getTargetBranchLevel);
-  }
-    public Trigger atCoralHeight(TargetingSystem targetingSystem)
-  {
-    return new Trigger(() -> {
-      switch (targetingSystem.getTargetBranchLevel())
-      {
-        case L2 ->
-        {
-          return aroundHeight(Coral.L2);
-        }
-        case L3 ->
-        {
-          return aroundHeight(Coral.L3);
-        }
-        case L1 ->
-        {
-          return aroundHeight(Coral.L1);
-        }
-        case L4 ->
-        {
-          return aroundHeight(Coral.L4);
-        }
-      }
-      return false;
-    });
-  
+    public Command setPower(double d) {
+        return run(() -> m_motor.set(d));
+    }
 
-  }
+    public Command toMin() {
+        return setPower(-0.1).until(m_elevator.min());
+    }
+
+    public Command CoralL1() {
+        return setElevatorHeight(Setpoints.Elevator.Coral.L1);
+    }
+
+    public Command CoralL2() {
+        return setElevatorHeight(Setpoints.Elevator.Coral.L2);
+    }
+
+    public Command CoralL3() {
+        return setElevatorHeight(Setpoints.Elevator.Coral.L3);
+    }
+
+    public Command CoralL4() {
+        return setElevatorHeight(Setpoints.Elevator.Coral.L4);
+    }
+
+    public Command hold() {
+        return m_elevator.setHeight(m_elevator.getHeight()).repeatedly();
+    }
+
+    public Command getCoralCommand(TargetingSystem targetingSystem) {
+        return Commands.select(Map.of(ReefBranchLevel.L1, CoralL1(),
+                        ReefBranchLevel.L2, CoralL2(),
+                        ReefBranchLevel.L3, CoralL3(),
+                        ReefBranchLevel.L4, CoralL4()),
+                targetingSystem::getTargetBranchLevel);
+    }
+
+    public Trigger atCoralHeight(TargetingSystem targetingSystem) {
+        return new Trigger(() -> {
+            switch (targetingSystem.getTargetBranchLevel()) {
+                case L2 -> {
+                    return aroundHeight(Coral.L2);
+                }
+                case L3 -> {
+                    return aroundHeight(Coral.L3);
+                }
+                case L1 -> {
+                    return aroundHeight(Coral.L1);
+                }
+                case L4 -> {
+                    return aroundHeight(Coral.L4);
+                }
+            }
+            return false;
+        });
+
+
+    }
 }
 
