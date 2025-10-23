@@ -96,7 +96,8 @@ public static class GroundConstants {
   public static final double ksimG = 0;
   public static final double ksimV = 0;
 
-  public static final int gearbox = 28;
+  public static final double[] gearbox = {16};
+  public static final double[] sprocket = {42,22};
   public static final Current statorCurrentLimit = Amps.of(40);
 
   public static final Angle softLimitMin = Degrees.of(5);

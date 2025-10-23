@@ -30,8 +30,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Setpoints;
 import frc.robot.Constants.CanIDs;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GroundConstants;
 import frc.robot.Setpoints.Arm.GroundIntake;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
+import yams.gearing.Sprocket;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.config.SensorConfig;
@@ -64,7 +68,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(GroundConstants.gearbox)))
+  .withGearing(new MechanismGearing(new GearBox(GroundConstants.gearbox), new Sprocket(GroundConstants.sprocket)))
   // Motor properties to prevent over currenting.
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
@@ -77,7 +81,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
   
   // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNeo550(1), smcConfig);
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNeoVortex(1), smcConfig);
  
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
