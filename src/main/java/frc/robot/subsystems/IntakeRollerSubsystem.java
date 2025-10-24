@@ -99,7 +99,9 @@ public class IntakeRollerSubsystem extends SubsystemBase
 
   public boolean outtaking()
   {
-      return getDutycycle() > 0.0 || getCurrentCommand().getName().equals("Outtake");
+    if(getCurrentCommand() != null)
+        return getDutycycle() > 0.0 || getCurrentCommand().getName().equals("Outtake");
+    return getDutycycle() > 0.0;
   }
 
   public double getDutycycle()

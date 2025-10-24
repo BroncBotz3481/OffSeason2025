@@ -20,12 +20,12 @@ public class Setpoints
 
     public static class Coral
     {
-
-      public static double L1 = 0.925; // Guessessss
-      public static double L2 = 1.2;
-      public static double L3 = 1.4;
-      public static double L4 = 1.6;
-      public static double HP = 1.04;
+      
+      public static double L1 = Inches.of(11.5).in(Meters); 
+      public static double L2 = Inches.of(24.5).in(Meters);
+      public static double L3 = Inches.of(38).in(Meters);
+      public static double L4 = Inches.of(66.5).in(Meters);
+      public static double HP = 1.04;//Guesses
     }
 
   }

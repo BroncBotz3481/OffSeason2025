@@ -51,25 +51,26 @@ public final class ElevatorConstants {
   public static final double drumRadius = 0.015875;
   public static final Distance mechanismCircumference = Meters.of(2 * Math.PI * drumRadius);
 
-  public static final double kP = 1.6 / (2 * Math.PI); // convert radians to rotations
+  public static final double kP = 2.0 / mechanismCircumference.in(Meters); // convert meter to rotations!
   public static final double kI = 0;
-  public static final double kD = 0;
-  public static final double ksimP = 1.6 / (2 * Math.PI);
+  public static final double kD = 0.05 / mechanismCircumference.in(Meters);
+  public static final double ksimP = 2.0 / mechanismCircumference.in(Meters);
   public static final double ksimI = 0;
-  public static final double ksimD = 0;
+  public static final double ksimD = 0.05 / mechanismCircumference.in(Meters);
 
   public static final double kS = 0;
-  public static final double kG = 0.13;
-  public static final double kV = 0;
+  public static final double kG = 0.12 / mechanismCircumference.in(Meters);
+  public static final double kV = 0.01 / mechanismCircumference.in(Meters);
   public static final double ksimS = 0;
-  public static final double ksimG = 0;
-  public static final double ksimV = 0;
+  public static final double ksimG = 0.12 / mechanismCircumference.in(Meters);
+  public static final double ksimV = 0.01 / mechanismCircumference.in(Meters);
 
   public static final double[] gearbox = {15.0};
   public static final Current statorCurrentLimit = Amps.of(40);
   
+  // Estimated Margin of error: 8 inches
   public static final Distance startingHeight = Meters.of(0);
-  public static final Distance hardLimitMin = Meters.of(0.925);
+  public static final Distance hardLimitMin = Meters.of(0);
   public static final Distance hardLimitMax = Meters.of(2.0658);
   public static final Mass mass = Pounds.of(28);
   public static final Distance absoluteOffset = Meters.of(0);
@@ -132,4 +133,6 @@ public static class TargetConstants{
   public static final ReefBranch defaultBranch = ReefBranch.A;
   public static final ReefBranchSide defaultBranchSide = ReefBranchSide.LEFT;
 }
+
+// public static class ConstantsToChange{}
 }
