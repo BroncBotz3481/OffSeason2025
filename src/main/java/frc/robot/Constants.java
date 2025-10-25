@@ -98,14 +98,15 @@ public static class GroundConstants {
   public static final double ksimG = 0;
   public static final double ksimV = 0;
 
-  public static final double[] gearbox = {336.0/11.0};
+  public static final double[] gearbox = {336.0,11.0};
   public static final double[] sprocket = {42,22};
   public static final Current statorCurrentLimit = Amps.of(40);
 
   public static final Angle softLimitMin = Degrees.of(50);
   public static final Angle softLimitMax = Degrees.of(180);
-  public static final Angle hardLimitMin = Degrees.of(65);
+  public static final Angle hardLimitMin = Degrees.of(40);
   public static final Angle hardLimitMax = Degrees.of(185);
+
   public static final Distance armLength = Meters.of(0.3511296);
   public static final Mass armMass =  Pounds.of(8);
   
@@ -116,18 +117,25 @@ public static class GroundConstants {
 public static class OutakeConstants {
   
   public static final double kArmAllowableError = RobotBase.isSimulation() ? 0.01 : 4;
+
   public static final Angle kArmHP = Degrees.of(145);
+  
   public static final Angle kHorizontalZero = Degrees.of(15); // Parallel to the ground at 15deg
   public static final Angle softLimitMin = Degrees.of(-40);
-public static final Angle hardLimitMax = Degrees.of(-65);
-public static final Angle hardLimitMin = Degrees.of(50);
-public static final Angle softLimitMax = Degrees.of(45);
+  public static final Angle hardLimitMax = Degrees.of(65);
+  public static final Angle hardLimitMin = Degrees.of(-50);
+  public static final Angle softLimitMax = Degrees.of(50);
+
 public static final double kP = 0;
 public static final double kI = 0;
 public static final double kD = 0;
 public static final double kPSim = 0;
 public static final double kISim = 0;
 public static final double kDsim = 0;
+
+public static final Angle kStartingPose = Degrees.of(-15);
+
+public static double[] kgearbox = {5};
 
   
 }

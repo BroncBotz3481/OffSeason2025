@@ -115,8 +115,8 @@ public void defaultCommands(){
     // cancelling on release.
     
     boolean testingEl = false;
-    boolean testingGR = false;
-    boolean testingOu = true;
+    boolean testingGR = true;
+    boolean testingOu = false;
 
     if (testingEl){
       m_driverController.button(1).whileTrue(elevatorSubsystem.CoralL1());
@@ -133,7 +133,7 @@ public void defaultCommands(){
       m_driverController.button(1).whileTrue(outakeArmSubsystem.L1());
       m_driverController.button(2).whileTrue(outakeArmSubsystem.L2());
       m_driverController.button(3).whileTrue(outakeArmSubsystem.L3());
-      m_driverController.button(3).whileTrue(outakeArmSubsystem.L4());
+      m_driverController.button(4).whileTrue(outakeArmSubsystem.L4());
     }
 
 

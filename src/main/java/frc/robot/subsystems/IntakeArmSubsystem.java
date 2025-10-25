@@ -139,12 +139,10 @@ public class IntakeArmSubsystem extends SubsystemBase {
   public boolean aroundPass(){ return aroundAngle(Setpoints.Arm.GroundIntake.intakeAngle);}
 
   public Command setGround() { 
-    System.out.println("Ground Angle");
     return setAngle(Setpoints.Arm.GroundIntake.intakeAngle);
   } // button triggers, intaking, stop, set pass, till around angle, pass
 
   public Command setPass() {
-    System.out.println("Pass Angle");
      return setAngle(Setpoints.Arm.GroundIntake.passAngle);
     } 
 

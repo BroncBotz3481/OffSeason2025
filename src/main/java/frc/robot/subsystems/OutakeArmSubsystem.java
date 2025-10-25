@@ -40,7 +40,11 @@ import frc.robot.systems.TargetingSystem;
 import frc.robot.systems.TargetingSystem.ReefBranchLevel;
 import frc.robot.Constants.CanIDs;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.GroundConstants;
 import frc.robot.Constants.OutakeConstants;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
+import yams.gearing.Sprocket;
 import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
@@ -66,7 +70,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
             .withTelemetry("OutakeArm", TelemetryVerbosity.HIGH)
             // Gearing from the motor rotor to final shaft.
             // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-            .withGearing(SmartMechanism.gearing(SmartMechanism.gearbox(5)))
+            .withGearing(new MechanismGearing(new GearBox(OutakeConstants.kgearbox)))
             // Motor properties to prevent over currenting.
             .withMotorInverted(false)
             .withIdleMode(MotorMode.BRAKE)
@@ -87,7 +91,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
             // Hard limit is applied to the simulation.
             .withHardLimit(OutakeConstants.hardLimitMin, OutakeConstants.hardLimitMax)
             // Starting position is where your arm starts
-            .withStartingPosition(Degrees.of(-15))
+            .withStartingPosition(OutakeConstants.kStartingPose)
             // Length and mass of your arm for sim.
             .withLength(Meters.of(0.3471418))
             .withMass(Pounds.of(6))
