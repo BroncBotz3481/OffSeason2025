@@ -26,7 +26,7 @@ import frc.robot.systems.TargetingSystem.ReefBranchSide;
  * globally (i.e. public static). Do not put anything functional in this class.
  *
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * constants are needed, to reduce verbosity.22
  */
 public final class Constants {
   public static class OperatorConstants {
@@ -34,6 +34,7 @@ public final class Constants {
     public static final double DEADBAND = 0.5;
   }
   public static final double              maxSpeed      = 7; //meters per second
+  public static final String OuttakeConstants = null;
 
 public final class CanIDs{
   public static final int ElevatorMain = 13;
@@ -83,10 +84,10 @@ public final class ElevatorConstants {
   
 }
 public static class GroundConstants {
-  public static final double kP = 100;
+  public static final double kP = 2;
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final double ksimP = 100;
+  public static final double ksimP = 2;
   public static final double ksimI = 0;
   public static final double ksimD = 0;
 
@@ -97,14 +98,14 @@ public static class GroundConstants {
   public static final double ksimG = 0;
   public static final double ksimV = 0;
 
-  public static final double[] gearbox = {16};
+  public static final double[] gearbox = {336.0/11.0};
   public static final double[] sprocket = {42,22};
   public static final Current statorCurrentLimit = Amps.of(40);
 
-  public static final Angle softLimitMin = Degrees.of(5);
-  public static final Angle softLimitMax = Degrees.of(150);
-  public static final Angle hardLimitMin = Degrees.of(5);
-  public static final Angle hardLimitMax = Degrees.of(150);
+  public static final Angle softLimitMin = Degrees.of(50);
+  public static final Angle softLimitMax = Degrees.of(180);
+  public static final Angle hardLimitMin = Degrees.of(65);
+  public static final Angle hardLimitMax = Degrees.of(185);
   public static final Distance armLength = Meters.of(0.3511296);
   public static final Mass armMass =  Pounds.of(8);
   
@@ -117,6 +118,16 @@ public static class OutakeConstants {
   public static final double kArmAllowableError = RobotBase.isSimulation() ? 0.01 : 4;
   public static final Angle kArmHP = Degrees.of(145);
   public static final Angle kHorizontalZero = Degrees.of(15); // Parallel to the ground at 15deg
+  public static final Angle softLimitMin = Degrees.of(-40);
+public static final Angle hardLimitMax = Degrees.of(-65);
+public static final Angle hardLimitMin = Degrees.of(50);
+public static final Angle softLimitMax = Degrees.of(45);
+public static final double kP = 0;
+public static final double kI = 0;
+public static final double kD = 0;
+public static final double kPSim = 0;
+public static final double kISim = 0;
+public static final double kDsim = 0;
 
   
 }

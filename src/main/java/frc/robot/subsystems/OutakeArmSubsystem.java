@@ -57,8 +57,8 @@ public class OutakeArmSubsystem extends SubsystemBase {
     private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             // Feedback Constants (PID Constants)
-            .withClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-            .withSimClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+            .withClosedLoopController(OutakeConstants.kP, OutakeConstants.kI, OutakeConstants.kD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+            .withSimClosedLoopController(OutakeConstants.kPSim, OutakeConstants.kISim, OutakeConstants.kDsim, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
             // Feedforward Constants
             .withFeedforward(new ArmFeedforward(0, 0, 0))
             .withSimFeedforward(new ArmFeedforward(0, 0, 0))
@@ -83,9 +83,9 @@ public class OutakeArmSubsystem extends SubsystemBase {
 
     private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
             // Soft limit is applied to the SmartMotorControllers PID
-            .withSoftLimits(Degrees.of(-50), Degrees.of(50))
+            .withSoftLimits(OutakeConstants.softLimitMin, OutakeConstants.softLimitMax)
             // Hard limit is applied to the simulation.
-            .withHardLimit(Degrees.of(-50), Degrees.of(50))
+            .withHardLimit(OutakeConstants.hardLimitMin, OutakeConstants.hardLimitMax)
             // Starting position is where your arm starts
             .withStartingPosition(Degrees.of(-15))
             // Length and mass of your arm for sim.
@@ -105,10 +105,6 @@ public class OutakeArmSubsystem extends SubsystemBase {
     }
 
 
-    public Command setAngle(Angle angle) {
-        return arm.setAngle(angle);
-        //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
-    }
 
     public Command set(double dutycycle) {
         return arm.set(dutycycle);
@@ -119,7 +115,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
     }
 
     public Command hold() {
-        return setAngle(arm.getAngle()).repeatedly();
+        return setAngle(arm.getAngle().in(Degrees)).repeatedly();
     }
 
     public Trigger isLoaded() {
@@ -146,25 +142,34 @@ public class OutakeArmSubsystem extends SubsystemBase {
     public boolean aroundAngle(double angle) {
         return aroundAngle(angle, Constants.OutakeConstants.kArmAllowableError);
     }
+    
+ /**
+   * Set the angle of the arm.
+   * @param angle Angle to go to.
+   */
+  public Command setAngle(double angle) {
+    return arm.setAngle(Degrees.of(angle));
+    //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
+}
 
     public Command L1() {
-        return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L1));
+        return setAngle((Setpoints.Arm.OuttakeArm.L1));
     }
 
     public Command L2() {
-        return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L2));
+        return setAngle((Setpoints.Arm.OuttakeArm.L2));
     }
 
     public Command L3() {
-        return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L3));
+        return setAngle((Setpoints.Arm.OuttakeArm.L3));
     }
 
     public Command L4() {
-        return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.L4));
+        return setAngle((Setpoints.Arm.OuttakeArm.L4));
     }
 
     public Command pass() {
-        return setAngle(Degrees.of(Setpoints.Arm.OuttakeArm.passAngle));
+        return setAngle((Setpoints.Arm.OuttakeArm.passAngle));
     }
 
     public Command getCoralCommand(TargetingSystem targetingSystem) {

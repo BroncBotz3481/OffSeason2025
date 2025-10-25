@@ -108,10 +108,10 @@ public class IntakeArmSubsystem extends SubsystemBase {
    * Set the angle of the arm.
    * @param angle Angle to go to.
    */
-  public Command setAngle(Angle angle) { 
-    //return m_Arm.setAngle(angle).until(m_Arm.isNear(angle, GroundConstants.kArmAllowableError));
-    return m_Arm.setAngle(angle);
-  }
+  public Command setAngle(double angle) {
+    return m_Arm.setAngle(Degrees.of(angle));
+    //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
+}
 
   /**
    * Move the arm up and down.
@@ -125,9 +125,6 @@ public class IntakeArmSubsystem extends SubsystemBase {
    */
   public Command sysId() { return m_Arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
 
-  public Command setGround() { return setAngle(Degrees.of(Setpoints.Arm.GroundIntake.intakeAngle));} // button triggers, intaking, stop, set pass, till around angle, pass
-
-  public Command setPass() { return setAngle(Degrees.of(Setpoints.Arm.GroundIntake.passAngle));} 
 
   public boolean aroundAngle(double angle, double allowableError){
     return MathUtil.isNear(angle, m_Arm.getAngle().in(Degrees), allowableError);
@@ -141,7 +138,17 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
   public boolean aroundPass(){ return aroundAngle(Setpoints.Arm.GroundIntake.intakeAngle);}
 
-  public Command hold(){return setAngle(m_Arm.getAngle()).repeatedly();}
+  public Command setGround() { 
+    System.out.println("Ground Angle");
+    return setAngle(Setpoints.Arm.GroundIntake.intakeAngle);
+  } // button triggers, intaking, stop, set pass, till around angle, pass
+
+  public Command setPass() {
+    System.out.println("Pass Angle");
+     return setAngle(Setpoints.Arm.GroundIntake.passAngle);
+    } 
+
+  public Command hold(){return setAngle(m_Arm.getAngle().in(Degrees)).repeatedly();}
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).

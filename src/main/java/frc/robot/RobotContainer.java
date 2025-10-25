@@ -93,8 +93,8 @@ public class RobotContainer {
 
 }
 public void defaultCommands(){
-  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Degrees.of(GroundIntake.intakeAngle)));
-  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(Degrees.of(OuttakeArm.passAngle)));
+  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(130));
+  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(50));
   elevatorSubsystem.setDefaultCommand(elevatorSubsystem.hold());
   drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
   
@@ -114,44 +114,72 @@ public void defaultCommands(){
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
-    m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
-    m_driverController.button(2).whileTrue(loadingSystem.coralTransfer());
-    m_driverController.button(3).whileTrue(scoringSystem.scoreCoral());
-    m_driverController.button(4).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()).andThen(scoringSystem.scoreCoral()));
+    boolean testingEl = false;
+    boolean testingGR = false;
+    boolean testingOu = true;
 
-    m_driverController.button(5).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-                                                         .andThen(Commands.runOnce(() ->
-                                                                                       drivebase.getSwerveDrive().field.getObject(
-                                                                                           "target").setPose(
-                                                                                           targetingSystem.getCoralTargetPose())))
-                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L1))
-                                         );
-      //L2 Score Coral
-      m_driverController.button(6).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-                                                         .andThen(Commands.runOnce(() ->
-                                                                                       drivebase.getSwerveDrive().field.getObject(
-                                                                                           "target").setPose(
-                                                                                           targetingSystem.getCoralTargetPose())))
+    if (testingEl){
+      m_driverController.button(1).whileTrue(elevatorSubsystem.CoralL1());
+      m_driverController.button(2).whileTrue(elevatorSubsystem.CoralL2());
+      m_driverController.button(3).whileTrue(elevatorSubsystem.CoralL3());
+      m_driverController.button(4).whileTrue(elevatorSubsystem.CoralL4());
+    }
+    if (testingGR){
+      m_driverController.button(1).whileTrue(intakeArmSubsystem.setPass());
+      m_driverController.button(2).whileTrue(intakeArmSubsystem.setGround());
 
-                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L2))
-                                         );
-      //L3 Score Coral
-      m_driverController.button(7).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-                                                         .andThen(Commands.runOnce(() ->
-                                                                                       drivebase.getSwerveDrive().field.getObject(
-                                                                                           "target").setPose(
-                                                                                           targetingSystem.getCoralTargetPose())))
+    }
+    if (testingOu){
+      m_driverController.button(1).whileTrue(outakeArmSubsystem.L1());
+      m_driverController.button(2).whileTrue(outakeArmSubsystem.L2());
+      m_driverController.button(3).whileTrue(outakeArmSubsystem.L3());
+      m_driverController.button(3).whileTrue(outakeArmSubsystem.L4());
+    }
 
-                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L3))
-                                         );
-      //L4 Score Coral
-      m_driverController.button(8).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-                                                         .andThen(Commands.runOnce(() ->
-                                                                                       drivebase.getSwerveDrive().field.getObject(
-                                                                                           "target").setPose(
-                                                                                           targetingSystem.getCoralTargetPose())))
-                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L4))
-                                         );
+
+
+
+
+
+
+    // m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
+    // m_driverController.button(2).whileTrue(loadingSystem.coralTransfer());
+    // m_driverController.button(3).whileTrue(scoringSystem.scoreCoral());
+    // m_driverController.button(4).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()).andThen(scoringSystem.scoreCoral()));
+
+    // m_driverController.button(5).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+    //                                                      .andThen(Commands.runOnce(() ->
+    //                                                                                    drivebase.getSwerveDrive().field.getObject(
+    //                                                                                        "target").setPose(
+    //                                                                                        targetingSystem.getCoralTargetPose())))
+    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L1))
+    //                                      );
+    //   //L2 Score Coral
+    //   m_driverController.button(6).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+    //                                                      .andThen(Commands.runOnce(() ->
+    //                                                                                    drivebase.getSwerveDrive().field.getObject(
+    //                                                                                        "target").setPose(
+    //                                                                                        targetingSystem.getCoralTargetPose())))
+
+    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L2))
+    //                                      );
+    //   //L3 Score Coral
+    //   m_driverController.button(7).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+    //                                                      .andThen(Commands.runOnce(() ->
+    //                                                                                    drivebase.getSwerveDrive().field.getObject(
+    //                                                                                        "target").setPose(
+    //                                                                                        targetingSystem.getCoralTargetPose())))
+
+    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L3))
+    //                                      );
+    //   //L4 Score Coral
+    //   m_driverController.button(8).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+    //                                                      .andThen(Commands.runOnce(() ->
+    //                                                                                    drivebase.getSwerveDrive().field.getObject(
+    //                                                                                        "target").setPose(
+    //                                                                                        targetingSystem.getCoralTargetPose())))
+    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L4))
+    //                                      );
   }
 
   /**
