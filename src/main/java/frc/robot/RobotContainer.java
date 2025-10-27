@@ -93,9 +93,9 @@ public class RobotContainer {
 
 }
 public void defaultCommands(){
-  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(130));
-  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(50));
-  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.hold());
+  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.hold().repeatedly());
+  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.hold().repeatedly());
+  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.hold().repeatedly());
   drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
   
 }
@@ -114,9 +114,9 @@ public void defaultCommands(){
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
-    boolean testingEl = false;
+    boolean testingEl = true;
     boolean testingGR = true;
-    boolean testingOu = false;
+    boolean testingOu = true;
 
     if (testingEl){
       m_driverController.button(1).whileTrue(elevatorSubsystem.CoralL1());

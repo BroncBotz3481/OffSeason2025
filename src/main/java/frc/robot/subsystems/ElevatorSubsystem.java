@@ -221,7 +221,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public Command hold() {
-        return m_elevator.setHeight(m_elevator.getHeight()).repeatedly();
+        return m_elevator.setHeight(m_elevator.getHeight());
     }
 
     public Command getCoralCommand(TargetingSystem targetingSystem) {
