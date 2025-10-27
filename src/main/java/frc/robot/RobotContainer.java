@@ -8,7 +8,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Setpoints.Arm.GroundIntake;
 import frc.robot.Setpoints.Arm.OuttakeArm;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.OutakeArmSubsystem;
@@ -94,9 +93,9 @@ public class RobotContainer {
 
 }
 public void defaultCommands(){
-  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.hold().repeatedly());
-  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.hold().repeatedly());
-  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.hold().repeatedly());
+  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.holdDefer());
+  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.holdDefer());
+  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdDefer());
   drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
   
 }

@@ -20,6 +20,7 @@ import edu.wpi.first.units.Unit;
 
 import java.lang.management.MemoryType;
 import java.util.Map;
+import java.util.Set;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -120,6 +121,10 @@ public class OutakeArmSubsystem extends SubsystemBase {
 
     public Command hold() {
         return setAngle(arm.getAngle().in(Degrees)).repeatedly();
+    }
+    
+    public Command holdDefer(){
+        return Commands.defer(()->hold(),Set.of(this));
     }
 
     public Trigger isLoaded() {

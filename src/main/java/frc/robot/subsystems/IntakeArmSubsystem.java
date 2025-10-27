@@ -15,6 +15,8 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.Set;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.revrobotics.spark.SparkMax;
@@ -26,6 +28,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Setpoints;
@@ -147,6 +150,10 @@ public class IntakeArmSubsystem extends SubsystemBase {
     } 
 
   public Command hold(){return setAngle(m_Arm.getAngle().in(Degrees));}
+
+  public Command holdDefer(){
+        return Commands.defer(()->hold(),Set.of(this));
+  }
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).

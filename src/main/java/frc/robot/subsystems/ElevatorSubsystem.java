@@ -15,6 +15,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -28,6 +29,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -224,6 +226,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public Command hold() {
         return m_elevator.setHeight(m_elevator.getHeight());
+    }
+
+    public Command holdDefer(){
+        return Commands.defer(()->hold(),Set.of(this));
     }
 
     public Command getCoralCommand(TargetingSystem targetingSystem) {
