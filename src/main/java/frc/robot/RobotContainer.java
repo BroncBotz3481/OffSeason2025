@@ -86,8 +86,9 @@ public class RobotContainer {
  /** The container for the robot. Contains subsystems, OI devices, and commands. */
  public RobotContainer() {
   // Configure the trigger bindings
-  configureBindings();
   defaultCommands();
+  configureBindings();
+ 
  
 
 
@@ -134,6 +135,7 @@ public void defaultCommands(){
       m_driverController.button(2).whileTrue(outakeArmSubsystem.L2());
       m_driverController.button(3).whileTrue(outakeArmSubsystem.L3());
       m_driverController.button(4).whileTrue(outakeArmSubsystem.L4());
+      m_driverController.button(5).whileTrue(outakeArmSubsystem.pass());
     }
 
 

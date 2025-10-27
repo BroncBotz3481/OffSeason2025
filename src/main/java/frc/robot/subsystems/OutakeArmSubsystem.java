@@ -152,28 +152,27 @@ public class OutakeArmSubsystem extends SubsystemBase {
    * @param angle Angle to go to.
    */
   public Command setAngle(double angle) {
-    return arm.setAngle(Degrees.of(angle));
-    //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
+    return arm.setAngle(Degrees.of(angle)).until(()->aroundAngle(angle));
 }
 
     public Command L1() {
-        return setAngle((Setpoints.Arm.OuttakeArm.L1));
+        return setAngle(Setpoints.Arm.OuttakeArm.L1);
     }
 
     public Command L2() {
-        return setAngle((Setpoints.Arm.OuttakeArm.L2));
+        return setAngle(Setpoints.Arm.OuttakeArm.L2);
     }
 
     public Command L3() {
-        return setAngle((Setpoints.Arm.OuttakeArm.L3));
+        return setAngle(Setpoints.Arm.OuttakeArm.L3);
     }
 
     public Command L4() {
-        return setAngle((Setpoints.Arm.OuttakeArm.L4));
+        return setAngle(Setpoints.Arm.OuttakeArm.L4);
     }
 
     public Command pass() {
-        return setAngle((Setpoints.Arm.OuttakeArm.passAngle));
+        return setAngle(Setpoints.Arm.OuttakeArm.passAngle);
     }
 
     public Command getCoralCommand(TargetingSystem targetingSystem) {

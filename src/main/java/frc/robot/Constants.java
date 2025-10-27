@@ -44,7 +44,7 @@ public final class CanIDs{
   public static final int OutakeArm = 16; 
   public static final int IntakeRoller = 17;
   public static final int OuttakeRoller= 18;
-  
+
 }
 
 public final class ElevatorConstants {
@@ -57,7 +57,7 @@ public final class ElevatorConstants {
   public static final double kP = 2.0 / mechanismCircumference.in(Meters); // convert meter to rotations!
   public static final double kI = 0;
   public static final double kD = 0.05 / mechanismCircumference.in(Meters);
-  public static final double ksimP = 2.0 / mechanismCircumference.in(Meters);
+  public static final double ksimP = 5.0 / mechanismCircumference.in(Meters);
   public static final double ksimI = 0;
   public static final double ksimD = 0.05 / mechanismCircumference.in(Meters);
 
@@ -89,7 +89,7 @@ public static class GroundConstants {
   public static final double kP = 2;
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final double ksimP = 2;
+  public static final double ksimP = 20;
   public static final double ksimI = 0;
   public static final double ksimD = 0;
 
@@ -112,7 +112,7 @@ public static class GroundConstants {
   public static final Distance armLength = Meters.of(0.3511296);
   public static final Mass armMass =  Pounds.of(8);
   
-  public static final Angle startingPosition = Degrees.of(150); // setting position of relative encoder
+  public static final Angle startingPosition = Degrees.of(130); // setting position of relative encoder
   public static final Angle kHorizontalZero = Degrees.of(15);// Parallel to the ground at 15deg - setting position of absolute
   public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
 }
@@ -123,15 +123,15 @@ public static class OutakeConstants {
   public static final Angle kArmHP = Degrees.of(145);
   
   public static final Angle kHorizontalZero = Degrees.of(15); // Parallel to the ground at 15deg
-  public static final Angle softLimitMin = Degrees.of(-40);
+  public static final Angle softLimitMin = Degrees.of(-50);
   public static final Angle hardLimitMax = Degrees.of(65);
-  public static final Angle hardLimitMin = Degrees.of(-50);
-  public static final Angle softLimitMax = Degrees.of(50);
+  public static final Angle hardLimitMin = Degrees.of(-55);
+  public static final Angle softLimitMax = Degrees.of(55);
 
-public static final double kP = 0;
+public static final double kP = 20;
 public static final double kI = 0;
 public static final double kD = 0;
-public static final double kPSim = 0;
+public static final double kPSim = 20;
 public static final double kISim = 0;
 public static final double kDsim = 0;
 
