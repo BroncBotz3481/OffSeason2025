@@ -120,32 +120,32 @@ public class OutakeArmSubsystem extends SubsystemBase {
         return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));
     }
 
-    // public Command hold() {
-    //     return setAngle(arm.getAngle().in(Degrees)).repeatedly();
-    // }
+    public Command hold() {
+        return setAngle(arm.getAngle().in(Degrees));
+    }
 
-    private double angleHold = 0;
-    public Command hold(boolean sync)
-    {
-      return startRun(() -> {
-        if (sync)
-        {
-            sparkSmartMotorController.synchronizeRelativeEncoder();
-        }
-        angleHold = MathUtil.clamp(getAngle().in(Degrees),
-                                   GroundConstants.softLimitMin.in(Degrees) +
-                                   GroundConstants.kArmAllowableError.in(Degrees),
-                                   GroundConstants.softLimitMax.in(Degrees) -
-                                   GroundConstants.kArmAllowableError.in(Degrees));
-        m_pidController.reset(arm.getAngle());
-      }, () ->       arm.setAngle(Degrees.of(MathUtil.clamp(angleHold, GroundConstants.softLimitMin.in(Degrees),GroundConstants.softLimitMax.in(Degrees)))));
+    // private double angleHold = 0;
+    // public Command hold(boolean sync)
+    // {
+    //   return startRun(() -> {
+    //     if (sync)
+    //     {
+    //         sparkSmartMotorController.synchronizeRelativeEncoder();
+    //     }
+    //     angleHold = MathUtil.clamp(getAngle().in(Degrees),
+    //                                GroundConstants.softLimitMin.in(Degrees) +
+    //                                GroundConstants.kArmAllowableError.in(Degrees),
+    //                                GroundConstants.softLimitMax.in(Degrees) -
+    //                                GroundConstants.kArmAllowableError.in(Degrees));
+                                 
+    //   }, () ->       arm.setAngle(Degrees.of(MathUtil.clamp(angleHold, GroundConstants.softLimitMin.in(Degrees),GroundConstants.softLimitMax.in(Degrees)))));
     
-    }
+    // }
   
-    public Command hold()
-    {
-      return hold(true);
-    }
+    // public Command hold()
+    // {
+    //   return hold(true);
+    // }
     
     public Command holdDefer(){
         return Commands.defer(()->hold(),Set.of(this));

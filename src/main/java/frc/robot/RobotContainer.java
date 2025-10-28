@@ -17,6 +17,9 @@ import swervelib.SwerveInputStream;
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
+import java.lang.reflect.Method;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -114,9 +117,9 @@ public void defaultCommands(){
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
-    boolean testingEl = true;
-    boolean testingGR = true;
-    boolean testingOu = true;
+    boolean testingEl = false;
+    boolean testingGR = false;
+    boolean testingOu = false;
     boolean loadingtest = false;
 
     if (testingEl){
@@ -145,8 +148,8 @@ public void defaultCommands(){
     }
 
 
-
-
+    //m_driverController.button(1).onTrue(scoringSystem.scoreCoral());
+    
 
 
 
@@ -155,13 +158,14 @@ public void defaultCommands(){
     // m_driverController.button(3).whileTrue(scoringSystem.scoreCoral());
     // m_driverController.button(4).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()).andThen(scoringSystem.scoreCoral()));
 
-    // m_driverController.button(5).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-    //                                                      .andThen(Commands.runOnce(() ->
-    //                                                                                    drivebase.getSwerveDrive().field.getObject(
-    //                                                                                        "target").setPose(
-    //                                                                                        targetingSystem.getCoralTargetPose())))
-    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L1))
-    //                                      );
+    m_driverController.button(5).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+                                                         .andThen(Commands.runOnce(() ->
+                                                                                       drivebase.getSwerveDrive().field.getObject(
+                                                                                           "target").setPose(
+                                                                                           targetingSystem.getCoralTargetPose())))
+                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L4))
+                                         );
+    m_driverController.button(6).onTrue(scoringSystem.scoreCoral());
     //   //L2 Score Coral
     //   m_driverController.button(6).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
     //                                                      .andThen(Commands.runOnce(() ->
@@ -199,4 +203,9 @@ public void defaultCommands(){
     // An example command will be run in autonomous
     return null;
   }
+  //testing stuff
+  // public Command coralTransfer(){
+  //   return elevatorSubsystem.setElevatorHeight(Meters.convertFrom(5, Inches))
+  //   .alongWith(intakeArmSubsystem.setPass(), outakeArmSubsystem.pass());
+  // }
 }
