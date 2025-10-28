@@ -117,6 +117,7 @@ public void defaultCommands(){
     boolean testingEl = true;
     boolean testingGR = true;
     boolean testingOu = true;
+    boolean loadingtest = false;
 
     if (testingEl){
       m_driverController.button(1).whileTrue(elevatorSubsystem.CoralL1());
@@ -127,6 +128,7 @@ public void defaultCommands(){
     if (testingGR){
       m_driverController.button(1).whileTrue(intakeArmSubsystem.setPass());
       m_driverController.button(2).whileTrue(intakeArmSubsystem.setGround());
+      m_driverController.button(3).whileTrue(intakeArmSubsystem.setAngle(130));
 
     }
     if (testingOu){
@@ -135,6 +137,11 @@ public void defaultCommands(){
       m_driverController.button(3).whileTrue(outakeArmSubsystem.L3());
       m_driverController.button(4).whileTrue(outakeArmSubsystem.L4());
       m_driverController.button(5).whileTrue(outakeArmSubsystem.pass());
+    }
+    if (loadingtest) {
+      m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
+      m_driverController.button(2).whileTrue(loadingSystem.coralTransfer());
+      m_driverController.button(3).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()));
     }
 
 

@@ -57,7 +57,7 @@ public final class ElevatorConstants {
   public static final double kP = 2.0 / mechanismCircumference.in(Meters); // convert meter to rotations!
   public static final double kI = 0;
   public static final double kD = 0.05 / mechanismCircumference.in(Meters);
-  public static final double ksimP = 5.0 / mechanismCircumference.in(Meters);
+  public static final double ksimP = 3.0 / mechanismCircumference.in(Meters);
   public static final double ksimI = 0;
   public static final double ksimD = 0.05 / mechanismCircumference.in(Meters);
 
@@ -89,7 +89,7 @@ public static class GroundConstants {
   public static final double kP = 2;
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final double ksimP = 20;
+  public static final double ksimP = 60;
   public static final double ksimI = 0;
   public static final double ksimD = 0;
 
@@ -128,7 +128,7 @@ public static class OutakeConstants {
   public static final Angle hardLimitMin = Degrees.of(-55);
   public static final Angle softLimitMax = Degrees.of(55);
 
-public static final double kP = 20;
+public static final double kP = 2;
 public static final double kI = 0;
 public static final double kD = 0;
 public static final double kPSim = 20;
@@ -145,7 +145,7 @@ public static double[] kgearbox = {5};
 
 public static class IntakeConstants{
   public static final double kRollerSpeed = 0.8;
-public static final double kLaserSenseDistancemm = 5;
+public static final int kLaserSenseDistancemm = 5;
   public static double kCurrentLoaded = 50;
 }
   

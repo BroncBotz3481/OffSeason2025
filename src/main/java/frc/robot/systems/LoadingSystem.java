@@ -86,7 +86,7 @@ public class LoadingSystem {
     }
 
     public boolean outtakeHasCoral() {
-        return getOuttakeCoralDistance().getAsDouble() >= IntakeConstants.kLaserSenseDistancemm;
+        return getOuttakeCoralDistance().getAsInt() >= IntakeConstants.kLaserSenseDistancemm;
     }
 
     /// ----------------- Sensor Data Simulation ----------------- ///
@@ -100,7 +100,7 @@ public class LoadingSystem {
     {
         return Commands.runOnce(()->{
             getOuttakeCoralDistance().set(SensorData.convert(IntakeConstants.kLaserSenseDistancemm));
-            getIntakeCurrent().set(SensorData.convert(0)); // Not realistic at all.
+            getIntakeCurrent().set(SensorData.convert(IntakeConstants.kCurrentLoaded - 20)); // Not realistic at all.
         });
     }
 
