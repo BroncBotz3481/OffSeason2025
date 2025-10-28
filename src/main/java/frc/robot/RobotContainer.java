@@ -120,28 +120,28 @@ public void defaultCommands(){
     boolean loadingtest = false;
 
     if (testingEl){
-      m_driverController.button(1).whileTrue(elevatorSubsystem.CoralL1());
-      m_driverController.button(2).whileTrue(elevatorSubsystem.CoralL2());
-      m_driverController.button(3).whileTrue(elevatorSubsystem.CoralL3());
-      m_driverController.button(4).whileTrue(elevatorSubsystem.CoralL4());
+      m_driverController.button(1).onTrue(elevatorSubsystem.CoralL1());
+      m_driverController.button(2).onTrue(elevatorSubsystem.CoralL2());
+      m_driverController.button(3).onTrue(elevatorSubsystem.CoralL3());
+      m_driverController.button(4).onTrue(elevatorSubsystem.CoralL4());
     }
     if (testingGR){
-      m_driverController.button(1).whileTrue(intakeArmSubsystem.setPass());
-      m_driverController.button(2).whileTrue(intakeArmSubsystem.setGround());
-      m_driverController.button(3).whileTrue(intakeArmSubsystem.setAngle(130));
+      m_driverController.button(1).onTrue(intakeArmSubsystem.setPass());
+      m_driverController.button(2).onTrue(intakeArmSubsystem.setGround());
+      m_driverController.button(3).onTrue(intakeArmSubsystem.setAngle(130));
 
     }
     if (testingOu){
-      m_driverController.button(1).whileTrue(outakeArmSubsystem.L1());
-      m_driverController.button(2).whileTrue(outakeArmSubsystem.L2());
-      m_driverController.button(3).whileTrue(outakeArmSubsystem.L3());
-      m_driverController.button(4).whileTrue(outakeArmSubsystem.L4());
-      m_driverController.button(5).whileTrue(outakeArmSubsystem.pass());
+      m_driverController.button(1).onTrue(outakeArmSubsystem.L1());
+      m_driverController.button(2).onTrue(outakeArmSubsystem.L2());
+      m_driverController.button(3).onTrue(outakeArmSubsystem.L3());
+      m_driverController.button(4).onTrue(outakeArmSubsystem.L4());
+      m_driverController.button(5).onTrue(outakeArmSubsystem.pass());
     }
     if (loadingtest) {
-      m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
-      m_driverController.button(2).whileTrue(loadingSystem.coralTransfer());
-      m_driverController.button(3).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()));
+      m_driverController.button(1).onTrue(loadingSystem.coralLoad());
+      m_driverController.button(2).onTrue(loadingSystem.coralTransfer());
+      m_driverController.button(3).onTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()));
     }
 
 

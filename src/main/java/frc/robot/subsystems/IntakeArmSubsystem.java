@@ -35,6 +35,7 @@ import frc.robot.Setpoints;
 import frc.robot.Constants.CanIDs;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GroundConstants;
+import frc.robot.Constants.OutakeConstants;
 import frc.robot.Setpoints.Arm.GroundIntake;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -75,12 +76,15 @@ public class IntakeArmSubsystem extends SubsystemBase {
   // Motor properties to prevent over currenting.
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
+  .withStartingPosition(GroundConstants.kStartingPose)
   .withStatorCurrentLimit(GroundConstants.statorCurrentLimit)
   .withClosedLoopRampRate(Seconds.of(0.25))
   .withOpenLoopRampRate(Seconds.of(0.25))
   .withExternalEncoder(m_motor.getAbsoluteEncoder())
   .withExternalEncoderInverted(true)
-  .withUseExternalFeedbackEncoder(true);
+  .withUseExternalFeedbackEncoder(true)
+  ;
+  
   //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
   
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -91,20 +95,23 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withSoftLimits(GroundConstants.softLimitMin, GroundConstants.softLimitMax)
   // Hard limit is applied to the simulation.
   .withHardLimit(GroundConstants.hardLimitMin, GroundConstants.hardLimitMax)
-  // Starting position is where your arm starts
-  .withStartingPosition(GroundConstants.startingPosition) //setting position of relative encoder
+
   // Length and mass of your arm for sim.
   .withLength(GroundConstants.armLength)
   .withMass(GroundConstants.armMass)
   // Telemetry name and verbosity for the arm.
   .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
+  
   .withHorizontalZero(GroundConstants.kHorizontalZero); 
 
+  
   // Arm Mechanism
   private Arm m_Arm = new Arm(armCfg);
 
   /** Creates a new ExampleSubsystem. */
-  public IntakeArmSubsystem() {sparkSmartMotorController.synchronizeRelativeEncoder(); }
+  public IntakeArmSubsystem() {
+   sparkSmartMotorController.synchronizeRelativeEncoder(); 
+  }
  
 
    /**

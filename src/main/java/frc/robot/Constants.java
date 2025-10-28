@@ -89,9 +89,9 @@ public static class GroundConstants {
   public static final double kP = 2;
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final double ksimP = 60;
+  public static final double ksimP = 50;
   public static final double ksimI = 0;
-  public static final double ksimD = 0;
+  public static final double ksimD = 2;
 
   public static final double kS = 0;
   public static final double kG = 0;
@@ -112,9 +112,11 @@ public static class GroundConstants {
   public static final Distance armLength = Meters.of(0.3511296);
   public static final Mass armMass =  Pounds.of(8);
   
-  public static final Angle startingPosition = Degrees.of(130); // setting position of relative encoder
-  public static final Angle kHorizontalZero = Degrees.of(15);// Parallel to the ground at 15deg - setting position of absolute
+  public static final Angle startingPosition = Degrees.of(180); // setting position of relative encoder
+  public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
   public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
+
+  public static final Angle kStartingPose = Degrees.of(130);
 }
 public static class OutakeConstants {
   
