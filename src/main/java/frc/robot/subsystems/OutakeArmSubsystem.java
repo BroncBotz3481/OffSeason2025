@@ -85,7 +85,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
             .withZeroOffset(Degrees.of(0));
 
 
-    private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(CanIDs.OutakeArm), smcConfig);
+    private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
 
     private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
             // Soft limit is applied to the SmartMotorControllers PID

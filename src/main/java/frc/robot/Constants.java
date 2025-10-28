@@ -86,21 +86,21 @@ public final class ElevatorConstants {
   
 }
 public static class GroundConstants {
-  public static final double kP = 2;
+  public static final double kP = 8.2 / (2 * Math.PI); // radians to rotations
   public static final double kI = 0;
-  public static final double kD = 0;
-  public static final double ksimP = 50;
+  public static final double kD = 0.3 / (2 * Math.PI);
+  public static final double ksimP = 8.2 / (2 * Math.PI);
   public static final double ksimI = 0;
-  public static final double ksimD = 2;
+  public static final double ksimD =  0.3 / (2 * Math.PI);
 
   public static final double kS = 0;
-  public static final double kG = 0;
-  public static final double kV = 0;
+  public static final double kG = 0.35 / (2 * Math.PI);
+  public static final double kV = 0.01 / (2 * Math.PI);
   public static final double ksimS = 0;
-  public static final double ksimG = 0;
-  public static final double ksimV = 0;
+  public static final double ksimG = 0.35 / (2 * Math.PI);
+  public static final double ksimV = 0.01 / (2 * Math.PI);
 
-  public static final double[] gearbox = {336.0,11.0};
+  public static final double[] gearbox = {16.0,11.0};
   public static final double[] sprocket = {42,22};
   public static final Current statorCurrentLimit = Amps.of(40);
 
