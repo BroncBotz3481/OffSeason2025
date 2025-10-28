@@ -86,7 +86,7 @@ public final class ElevatorConstants {
   
 }
 public static class GroundConstants {
-  public static final double kP = 2;
+  public static final double kP = 20;
   public static final double kI = 0;
   public static final double kD = 0;
   public static final double ksimP = 50;

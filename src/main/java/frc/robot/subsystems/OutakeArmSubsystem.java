@@ -30,11 +30,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Setpoints;
 import frc.robot.Setpoints.Arm.OuttakeArm;
 import frc.robot.Setpoints.Elevator.Coral;
@@ -85,7 +87,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
             .withZeroOffset(Degrees.of(0));
 
 
-    private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(CanIDs.OutakeArm), smcConfig);
+    private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
 
     private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
             // Soft limit is applied to the SmartMotorControllers PID
@@ -107,7 +109,8 @@ public class OutakeArmSubsystem extends SubsystemBase {
      * Creates a new ExampleSubsystem.
      */
     public OutakeArmSubsystem() {
-        //sparkSmartMotorController.synchronizeRelativeEncoder();
+        if(RobotBase.isSimulation())
+            sparkSmartMotorController.synchronizeRelativeEncoder();
     }
 
 

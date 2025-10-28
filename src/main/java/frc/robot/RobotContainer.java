@@ -96,10 +96,10 @@ public class RobotContainer {
 
 }
 public void defaultCommands(){
-  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.holdDefer());
-  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.holdDefer());
-  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdDefer());
-  drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
+  // intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.holdDefer());
+  // outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.holdDefer());
+  // elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdDefer());
+  // drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
   
 }
   /**
@@ -117,55 +117,56 @@ public void defaultCommands(){
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
-    boolean testingEl = false;
-    boolean testingGR = false;
-    boolean testingOu = false;
+    boolean testingEl = true;
+    boolean testingGR = true;
+    boolean testingOu = true;
     boolean loadingtest = false;
 
-    if (testingEl){
-      m_driverController.button(1).onTrue(elevatorSubsystem.CoralL1());
-      m_driverController.button(2).onTrue(elevatorSubsystem.CoralL2());
-      m_driverController.button(3).onTrue(elevatorSubsystem.CoralL3());
-      m_driverController.button(4).onTrue(elevatorSubsystem.CoralL4());
-    }
-    if (testingGR){
-      m_driverController.button(1).onTrue(intakeArmSubsystem.setPass());
-      m_driverController.button(2).onTrue(intakeArmSubsystem.setGround());
-      m_driverController.button(3).onTrue(intakeArmSubsystem.setAngle(130));
+    // if (testingEl){
+    //   m_driverController.button(1).onTrue(elevatorSubsystem.CoralL1());
+    //   m_driverController.button(2).onTrue(elevatorSubsystem.CoralL2());
+    //   m_driverController.button(3).onTrue(elevatorSubsystem.CoralL3());
+    //   m_driverController.button(4).onTrue(elevatorSubsystem.CoralL4());
+    // }
+    // if (testingGR){
+    //   m_driverController.button(1).onTrue(intakeArmSubsystem.setPass());
+    //   m_driverController.button(2).onTrue(intakeArmSubsystem.setGround());
+    //   m_driverController.button(3).onTrue(intakeArmSubsystem.setAngle(130));
 
-    }
-    if (testingOu){
-      m_driverController.button(1).onTrue(outakeArmSubsystem.L1());
-      m_driverController.button(2).onTrue(outakeArmSubsystem.L2());
-      m_driverController.button(3).onTrue(outakeArmSubsystem.L3());
-      m_driverController.button(4).onTrue(outakeArmSubsystem.L4());
-      m_driverController.button(5).onTrue(outakeArmSubsystem.pass());
-    }
-    if (loadingtest) {
-      m_driverController.button(1).onTrue(loadingSystem.coralLoad());
-      m_driverController.button(2).onTrue(loadingSystem.coralTransfer());
-      m_driverController.button(3).onTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()));
-    }
+    // }
+    // if (testingOu){
+    //   m_driverController.button(1).onTrue(outakeArmSubsystem.L1());
+    //   m_driverController.button(2).onTrue(outakeArmSubsystem.L2());
+    //   m_driverController.button(3).onTrue(outakeArmSubsystem.L3());
+    //   m_driverController.button(4).onTrue(outakeArmSubsystem.L4());
+    //   m_driverController.button(5).onTrue(outakeArmSubsystem.pass());
+    // }
+    // if (loadingtest) {
+    //   m_driverController.button(1).onTrue(loadingSystem.coralLoad());
+    //   m_driverController.button(2).onTrue(loadingSystem.coralTransfer());
+    //   m_driverController.button(3).onTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()));
+    // }
 
 
-    //m_driverController.button(1).onTrue(scoringSystem.scoreCoral());
+    // //m_driverController.button(1).onTrue(scoringSystem.scoreCoral());
     
 
-
+    // m_driverController.rightBumper().whileTrue(groundRollers.in());
+    // m_driverController.leftBumper().whileTrue(elevatorSubsystem.setElevatorHeight(Meters.convertFrom(5, Inches)));
 
     // m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
     // m_driverController.button(2).whileTrue(loadingSystem.coralTransfer());
     // m_driverController.button(3).whileTrue(scoringSystem.scoreCoral());
     // m_driverController.button(4).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()).andThen(scoringSystem.scoreCoral()));
 
-    m_driverController.button(5).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-                                                         .andThen(Commands.runOnce(() ->
-                                                                                       drivebase.getSwerveDrive().field.getObject(
-                                                                                           "target").setPose(
-                                                                                           targetingSystem.getCoralTargetPose())))
-                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L4))
-                                         );
-    m_driverController.button(6).onTrue(scoringSystem.scoreCoral());
+    // m_driverController.button(5).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
+    //                                                      .andThen(Commands.runOnce(() ->
+    //                                                                                    drivebase.getSwerveDrive().field.getObject(
+    //                                                                                        "target").setPose(
+    //                                                                                        targetingSystem.getCoralTargetPose())))
+    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L4))
+    //                                      );
+    // m_driverController.button(6).onTrue(scoringSystem.scoreCoral());
     //   //L2 Score Coral
     //   m_driverController.button(6).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
     //                                                      .andThen(Commands.runOnce(() ->
