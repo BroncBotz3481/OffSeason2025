@@ -86,23 +86,23 @@ public final class ElevatorConstants {
   
 }
 public static class GroundConstants {
-  public static final double kP = 8.2 / (2 * Math.PI); // radians to rotations
+  public static final double kP = 8.2; // radians to rotations
   public static final double kI = 0;
-  public static final double kD = 0.3 / (2 * Math.PI);
-  public static final double ksimP = 8.2 / (2 * Math.PI);
+  public static final double kD = 0.3;
+  public static final double ksimP = 60 ;
   public static final double ksimI = 0;
-  public static final double ksimD =  0.3 / (2 * Math.PI);
+  public static final double ksimD =  0.3;
 
   public static final double kS = 0;
-  public static final double kG = 0.35 / (2 * Math.PI);
-  public static final double kV = 0.01 / (2 * Math.PI);
+  public static final double kG = 0.35 ;
+  public static final double kV = 0.01 ;
   public static final double ksimS = 0;
-  public static final double ksimG = 0.35 / (2 * Math.PI);
-  public static final double ksimV = 0.01 / (2 * Math.PI);
+  public static final double ksimG = 0;
+  public static final double ksimV = 0;
 
-  public static final double[] gearbox = {16.0,11.0};
-  public static final double[] sprocket = {42,22};
-  public static final Current statorCurrentLimit = Amps.of(40);
+  public static final String[] gearbox = {"16.0:1.0"};
+  public static final String[] sprocket = {"42:22"};
+  public static final Current statorCurrentLimit = Amps.of(60);
 
   public static final Angle softLimitMin = Degrees.of(50);
   public static final Angle softLimitMax = Degrees.of(180);
@@ -133,13 +133,13 @@ public static class OutakeConstants {
 public static final double kP = 2;
 public static final double kI = 0;
 public static final double kD = 0;
-public static final double kPSim = 20;
+public static final double kPSim = 120;
 public static final double kISim = 0;
 public static final double kDsim = 0;
 
 public static final Angle kStartingPose = Degrees.of(-15);
 
-public static double[] kgearbox = {5};
+public static String[] kgearbox = {"5:1"};
 
   
 }

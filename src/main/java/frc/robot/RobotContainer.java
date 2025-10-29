@@ -117,9 +117,9 @@ public void defaultCommands(){
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
-    boolean testingEl = false;
-    boolean testingGR = false;
-    boolean testingOu = false;
+    boolean testingEl = true;
+    boolean testingGR = true;
+    boolean testingOu = true;
     boolean loadingtest = false;
 
     if (testingEl){
@@ -146,7 +146,7 @@ public void defaultCommands(){
       m_driverController.button(2).onTrue(loadingSystem.coralTransfer());
       m_driverController.button(3).onTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()));
     }
-
+    m_driverController.button(7).whileTrue(intakeArmSubsystem.sysId());
 
     //m_driverController.button(1).onTrue(scoringSystem.scoreCoral());
     

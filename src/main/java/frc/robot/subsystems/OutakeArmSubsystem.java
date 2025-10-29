@@ -76,7 +76,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
             // Motor properties to prevent over currenting.
             .withMotorInverted(false)
             .withIdleMode(MotorMode.BRAKE)
-            .withStatorCurrentLimit(Amps.of(40))
+            .withStatorCurrentLimit(Amps.of(50))
             .withClosedLoopRampRate(Seconds.of(0.25))
             .withOpenLoopRampRate(Seconds.of(0.25))
             .withExternalEncoder(spark.getAbsoluteEncoder())
@@ -181,7 +181,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
    * @param angle Angle to go to.
    */
   public Command setAngle(double angle) {
-    return arm.setAngle(Degrees.of(angle)).until(()->aroundAngle(angle));
+    return arm.setAngle(Degrees.of(angle));
 }
 
     public Command L1() {

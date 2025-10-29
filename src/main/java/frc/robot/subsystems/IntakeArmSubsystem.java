@@ -119,7 +119,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
    * @param angle Angle to go to.
    */
   public Command setAngle(double angle) {
-    return m_Arm.setAngle(Degrees.of(angle)).until(()->aroundAngle(angle));
+    return m_Arm.setAngle(Degrees.of(angle));
     //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
 }
 
