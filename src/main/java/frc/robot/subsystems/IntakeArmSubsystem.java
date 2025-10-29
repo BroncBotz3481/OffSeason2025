@@ -88,7 +88,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
   
   // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(CanIDs.IntakeArm), smcConfig);
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(1), smcConfig);
  
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
@@ -146,7 +146,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
   public boolean aroundGround(){ return aroundAngle(Setpoints.Arm.GroundIntake.intakeAngle);} //.until(()->intakeArmSubsystem.aroundAngle(0)));
 
-  public boolean aroundPass(){ return aroundAngle(Setpoints.Arm.GroundIntake.intakeAngle);}
+  public boolean aroundPass(){ return aroundAngle(Setpoints.Arm.GroundIntake.passAngle);}
 
   public Command setGround() { 
     return setAngle(Setpoints.Arm.GroundIntake.intakeAngle);

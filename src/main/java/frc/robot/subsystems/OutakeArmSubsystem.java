@@ -216,16 +216,16 @@ public class OutakeArmSubsystem extends SubsystemBase {
         return new Trigger(() -> {
             switch (targetingSystem.getTargetBranchLevel()) {
                 case L2 -> {
-                    return aroundAngle(Coral.L2);
+                    return aroundAngle(OuttakeArm.L2);
                 }
                 case L3 -> {
-                    return aroundAngle(Coral.L3);
+                    return aroundAngle(OuttakeArm.L3);
                 }
                 case L1 -> {
-                    return aroundAngle(Coral.L1);
+                    return aroundAngle(OuttakeArm.L1);
                 }
                 case L4 -> {
-                    return aroundAngle(Coral.L4);
+                    return aroundAngle(OuttakeArm.L4);
                 }
             }
             return false;
