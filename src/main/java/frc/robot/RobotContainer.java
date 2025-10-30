@@ -4,32 +4,26 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degree;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.GroundConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Setpoints.Arm.GroundIntake;
-import frc.robot.Setpoints.Arm.OuttakeArm;
+import frc.robot.Constants.OutakeConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.OutakeArmSubsystem;
 import frc.robot.subsystems.OutakeRollerSubsystem;
-import swervelib.SwerveInputStream;
-
-import static edu.wpi.first.units.Units.Degree;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
-
-import java.lang.reflect.Method;
-
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.systems.LoadingSystem;
 import frc.robot.systems.ScoringSystem;
 import frc.robot.systems.TargetingSystem;
-import frc.robot.systems.TargetingSystem.ReefBranchLevel;
+import swervelib.SwerveInputStream;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,6 +38,8 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_operatorController =  
+      new CommandXboxController(OperatorConstants.kOperatorControllerPort) ;
 
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
 
@@ -72,7 +68,7 @@ public class RobotContainer {
                                                                .scaleTranslation(0.8)
                                                                .allianceRelativeControl(true);
 
-  Command driveRobotOrientedAngularVelocity = drivebase.drive(driveAngularVelocity);
+  Command driveRobotOrientedAngularVelocity = drivebase.drive(Robot.isSimulation() ? driveAngularVelocitySim : driveAngularVelocity);
 
 
   private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
@@ -90,15 +86,21 @@ public class RobotContainer {
   // Configure the trigger bindings
   defaultCommands();
   configureBindings();
+  DriverStation.silenceJoystickConnectionWarning(true);
  
  
 
 
 }
 public void defaultCommands(){
-  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.holdDefer());
-  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.holdDefer());
-  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdDefer());
+  // intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.holdDefer());
+  // outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.holdDefer());
+  // elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdDefer());
+
+  intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.set(0));
+  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.set(0));
+  elevatorSubsystem.setDefaultCommand(elevatorSubsystem.set(0));
+
   drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
   
 }
@@ -117,9 +119,9 @@ public void defaultCommands(){
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
-    boolean testingEl = true;
-    boolean testingGR = true;
-    boolean testingOu = true;
+    boolean testingEl = false;
+    boolean testingGR = false;
+    boolean testingOu = false;
     boolean loadingtest = false;
 
     if (testingEl){
@@ -147,51 +149,50 @@ public void defaultCommands(){
       m_driverController.button(3).onTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()));
     }
     m_driverController.button(7).whileTrue(intakeArmSubsystem.sysId());
+    m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
+    m_driverController.button(2).whileTrue(loadingSystem.coralLoadAuto());
+    m_driverController.button(3).whileTrue(loadingSystem.coralLoad()).whileFalse(loadingSystem.coralTransfer());
 
-    //m_driverController.button(1).onTrue(scoringSystem.scoreCoral());
+    /////////////////// ---------- BUTTONS ---------- \\\\\\\\\\\\\\\\\\\\\\\
+
     
+    m_operatorController.button(1).whileTrue(intakeArmSubsystem.sysId());
+    m_operatorController.button(2).whileTrue(intakeArmSubsystem.set(0));
+    // Schedule `set` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    m_operatorController.button(3).whileTrue(intakeArmSubsystem.set(0.3));
+    m_operatorController.button(4).whileTrue(intakeArmSubsystem.set(-0.3));
+    m_operatorController.button(5).onTrue(intakeArmSubsystem.setAngle(50));
+
+    // if (Robot.isSimulation()){
+
+    //   m_operatorController.button(1).whileTrue(loadingSystem.coralLoad());
+    //   m_operatorController.button(2).onTrue(loadingSystem.coralLoadAuto());
+  
+    //   m_operatorController.button(3).onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
+    //   m_operatorController.button(4).onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
+    //   m_operatorController.button(5).onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
+    //   m_operatorController.button(6).onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
+  
+    //   m_operatorController.button(7).whileTrue(outtakeRollers.out());
+    //   m_operatorController.button(8).onTrue(intakeArmSubsystem.setGround());
+
+    // } else {
+
+    //   m_operatorController.rightBumper().whileTrue(loadingSystem.coralLoad());
+    //   m_operatorController.leftBumper().onTrue(loadingSystem.coralLoadAuto());
+  
+    //   m_operatorController.a().onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
+    //   m_operatorController.b().onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
+    //   m_operatorController.x().onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
+    //   m_operatorController.y().onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
+  
+    //   m_operatorController.povUp().whileTrue(outtakeRollers.out());
+    //   m_operatorController.povDown().onTrue(intakeArmSubsystem.setGround());
+
+    // }
 
 
-
-    // m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
-    // m_driverController.button(2).whileTrue(loadingSystem.coralTransfer());
-    // m_driverController.button(3).whileTrue(scoringSystem.scoreCoral());
-    // m_driverController.button(4).whileTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()).andThen(scoringSystem.scoreCoral()));
-
-    m_driverController.button(5).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-                                                         .andThen(Commands.runOnce(() ->
-                                                                                       drivebase.getSwerveDrive().field.getObject(
-                                                                                           "target").setPose(
-                                                                                           targetingSystem.getCoralTargetPose())))
-                                                         .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L4))
-                                         );
-    m_driverController.button(6).onTrue(scoringSystem.scoreCoral());
-    //   //L2 Score Coral
-    //   m_driverController.button(6).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-    //                                                      .andThen(Commands.runOnce(() ->
-    //                                                                                    drivebase.getSwerveDrive().field.getObject(
-    //                                                                                        "target").setPose(
-    //                                                                                        targetingSystem.getCoralTargetPose())))
-
-    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L2))
-    //                                      );
-    //   //L3 Score Coral
-    //   m_driverController.button(7).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-    //                                                      .andThen(Commands.runOnce(() ->
-    //                                                                                    drivebase.getSwerveDrive().field.getObject(
-    //                                                                                        "target").setPose(
-    //                                                                                        targetingSystem.getCoralTargetPose())))
-
-    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L3))
-    //                                      );
-    //   //L4 Score Coral
-    //   m_driverController.button(8).whileTrue(targetingSystem.autoTargetCommand(drivebase::getPose)
-    //                                                      .andThen(Commands.runOnce(() ->
-    //                                                                                    drivebase.getSwerveDrive().field.getObject(
-    //                                                                                        "target").setPose(
-    //                                                                                        targetingSystem.getCoralTargetPose())))
-    //                                                      .andThen(targetingSystem.setBranchLevel(ReefBranchLevel.L4))
-    //                                      );
   }
 
   /**
@@ -208,4 +209,11 @@ public void defaultCommands(){
   //   return elevatorSubsystem.setElevatorHeight(Meters.convertFrom(5, Inches))
   //   .alongWith(intakeArmSubsystem.setPass(), outakeArmSubsystem.pass());
   // }
+
+  public Command setStartAngles(){
+    return Commands.run(()-> {
+      intakeArmSubsystem.setAngle(GroundConstants.kStartingPose.in(Degree));
+      outakeArmSubsystem.setAngle(OutakeConstants.kStartingPose.in(Degree));
+    });
+  }
 }

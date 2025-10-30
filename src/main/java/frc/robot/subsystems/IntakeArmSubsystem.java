@@ -88,7 +88,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
   
   // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(1), smcConfig);
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNeoVortex(1), smcConfig);
  
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
@@ -133,7 +133,9 @@ public class IntakeArmSubsystem extends SubsystemBase {
   /**
    * Run sysId on the {@link Arm}
    */
-  public Command sysId() { return m_Arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
+  public Command sysId() { 
+    return m_Arm.sysId(Volts.of(4.5), Volts.of(0.5).per(Second), Seconds.of(4));
+  }
 
 
   public boolean aroundAngle(double angle, double allowableError){
@@ -187,6 +189,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   public Angle getAngle() {
     return m_Arm.getAngle();
   }
+
 }
 
 /*

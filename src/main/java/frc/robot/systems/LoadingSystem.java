@@ -6,8 +6,8 @@ import au.grapplerobotics.LaserCan;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Robot;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Robot;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -140,7 +140,8 @@ public class LoadingSystem {
 
     public Command coralLoadAuto() {
 
-        return null;
+        return m_intake.setPass().alongWith(m_outake.pass(), m_elevator.pass())
+                .until(()-> readyToTransfer()).andThen(coralTransfer());
 
     }
 

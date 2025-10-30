@@ -8,23 +8,15 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Feet;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Pounds;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Unit;
-
-import java.lang.management.MemoryType;
 import java.util.Map;
 import java.util.Set;
 
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -35,19 +27,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.Setpoints;
-import frc.robot.Setpoints.Arm.OuttakeArm;
-import frc.robot.Setpoints.Elevator.Coral;
-import frc.robot.systems.TargetingSystem;
-import frc.robot.systems.TargetingSystem.ReefBranchLevel;
 import frc.robot.Constants.CanIDs;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GroundConstants;
 import frc.robot.Constants.OutakeConstants;
+import frc.robot.Setpoints;
+import frc.robot.Setpoints.Arm.OuttakeArm;
+import frc.robot.systems.TargetingSystem;
+import frc.robot.systems.TargetingSystem.ReefBranchLevel;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
-import yams.gearing.Sprocket;
-import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
@@ -66,8 +54,8 @@ public class OutakeArmSubsystem extends SubsystemBase {
             .withClosedLoopController(OutakeConstants.kP, OutakeConstants.kI, OutakeConstants.kD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
             .withSimClosedLoopController(OutakeConstants.kPSim, OutakeConstants.kISim, OutakeConstants.kDsim, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
             // Feedforward Constants
-            .withFeedforward(new ArmFeedforward(0, 0, 0))
-            .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+            .withFeedforward(new ArmFeedforward(OutakeConstants.kS, OutakeConstants.kG, OutakeConstants.kV))
+            .withSimFeedforward(new ArmFeedforward(OutakeConstants.ksimS, OutakeConstants.ksimG, OutakeConstants.ksimV))
             // Telemetry name and verbosity level
             .withTelemetry("OutakeArm", TelemetryVerbosity.HIGH)
             // Gearing from the motor rotor to final shaft.
@@ -84,8 +72,10 @@ public class OutakeArmSubsystem extends SubsystemBase {
             .withUseExternalFeedbackEncoder(true)
             .withZeroOffset(Degrees.of(0));
 
+            //
 
-    private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
+
+    private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNeoVortex(1), smcConfig);
 
     private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
             // Soft limit is applied to the SmartMotorControllers PID
@@ -95,8 +85,8 @@ public class OutakeArmSubsystem extends SubsystemBase {
             // Starting position is where your arm starts
             .withStartingPosition(OutakeConstants.kStartingPose)
             // Length and mass of your arm for sim.
-            .withLength(Meters.of(0.3471418))
-            .withMass(Pounds.of(6))
+            .withLength(OutakeConstants.kLength)
+            .withMass(OutakeConstants.kMass)
             // Telemetry name and verbosity for the arm.
             .withTelemetry("OutakeArm", TelemetryVerbosity.HIGH);
 
@@ -107,7 +97,7 @@ public class OutakeArmSubsystem extends SubsystemBase {
      * Creates a new ExampleSubsystem.
      */
     public OutakeArmSubsystem() {
-        //sparkSmartMotorController.synchronizeRelativeEncoder();
+        sparkSmartMotorController.synchronizeRelativeEncoder();
     }
 
 

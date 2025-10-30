@@ -44,7 +44,7 @@ public class Setpoints
     public static double sensorDistanceThreshold = 0.8;
     }
     public static class GroundIntake{
-      public static double intakeAngle = 180;
+      public static double intakeAngle = 179;
       public static double passAngle = 50;
     }
 

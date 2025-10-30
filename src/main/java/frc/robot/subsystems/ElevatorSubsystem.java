@@ -224,6 +224,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         return setElevatorHeight(Setpoints.Elevator.Coral.L4);
     }
 
+    public Command pass(){
+        return setElevatorHeight(Meters.convertFrom(5, Inches));
+    }
+
     public Command hold() {
         return m_elevator.setHeight(m_elevator.getHeight());
     }
