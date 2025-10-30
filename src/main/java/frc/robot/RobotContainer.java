@@ -156,41 +156,41 @@ public void defaultCommands(){
     /////////////////// ---------- BUTTONS ---------- \\\\\\\\\\\\\\\\\\\\\\\
 
     
-    m_operatorController.button(1).whileTrue(intakeArmSubsystem.sysId());
-    m_operatorController.button(2).whileTrue(intakeArmSubsystem.set(0));
-    // Schedule `set` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_operatorController.button(3).whileTrue(intakeArmSubsystem.set(0.3));
-    m_operatorController.button(4).whileTrue(intakeArmSubsystem.set(-0.3));
-    m_operatorController.button(5).onTrue(intakeArmSubsystem.setAngle(50));
+    // m_operatorController.button(1).whileTrue(intakeArmSubsystem.sysId());
+    // m_operatorController.button(2).whileTrue(intakeArmSubsystem.set(0));
+    // // Schedule `set` when the Xbox controller's B button is pressed,
+    // // cancelling on release.
+    // m_operatorController.button(3).whileTrue(intakeArmSubsystem.set(0.3));
+    // m_operatorController.button(4).whileTrue(intakeArmSubsystem.set(-0.3));
+    // m_operatorController.button(5).onTrue(intakeArmSubsystem.setAngle(50));
 
-    // if (Robot.isSimulation()){
+    if (Robot.isSimulation()){
 
-    //   m_operatorController.button(1).whileTrue(loadingSystem.coralLoad());
-    //   m_operatorController.button(2).onTrue(loadingSystem.coralLoadAuto());
+      m_operatorController.button(1).whileTrue(loadingSystem.coralLoad());
+      m_operatorController.button(2).onTrue(loadingSystem.coralLoadAuto());
   
-    //   m_operatorController.button(3).onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
-    //   m_operatorController.button(4).onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
-    //   m_operatorController.button(5).onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
-    //   m_operatorController.button(6).onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
+      m_operatorController.button(3).onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
+      m_operatorController.button(4).onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
+      m_operatorController.button(5).onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
+      m_operatorController.button(6).onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
   
-    //   m_operatorController.button(7).whileTrue(outtakeRollers.out());
-    //   m_operatorController.button(8).onTrue(intakeArmSubsystem.setGround());
+      m_operatorController.button(7).whileTrue(outtakeRollers.out());
+      m_operatorController.button(8).onTrue(intakeArmSubsystem.setGround());
 
-    // } else {
+    } else {
 
-    //   m_operatorController.rightBumper().whileTrue(loadingSystem.coralLoad());
-    //   m_operatorController.leftBumper().onTrue(loadingSystem.coralLoadAuto());
+      m_operatorController.rightBumper().whileTrue(loadingSystem.coralLoad());
+      m_operatorController.leftBumper().onTrue(loadingSystem.coralLoadAuto());
   
-    //   m_operatorController.a().onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
-    //   m_operatorController.b().onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
-    //   m_operatorController.x().onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
-    //   m_operatorController.y().onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
+      m_operatorController.a().onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
+      m_operatorController.b().onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
+      m_operatorController.x().onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
+      m_operatorController.y().onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
   
-    //   m_operatorController.povUp().whileTrue(outtakeRollers.out());
-    //   m_operatorController.povDown().onTrue(intakeArmSubsystem.setGround());
+      m_operatorController.povUp().whileTrue(outtakeRollers.out());
+      m_operatorController.povDown().onTrue(intakeArmSubsystem.setGround());
 
-    // }
+    }
 
 
   }
