@@ -29,7 +29,7 @@ public class IntakeRollerSubsystem extends SubsystemBase
 
   private final SparkMax m_rollerMotor = new SparkMax(CanIDs.IntakeRoller, MotorType.kBrushless);
 
-  private final DCMotor m_rollerMotorGearbox = DCMotor.getNEO(1);
+  private final DCMotor m_rollerMotorGearbox = DCMotor.getNeoVortex(1);
 
   private final FlywheelSim m_rollerSim = new FlywheelSim(LinearSystemId.createFlywheelSystem(
       m_rollerMotorGearbox,

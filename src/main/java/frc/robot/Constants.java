@@ -9,8 +9,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.Rotation;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
@@ -90,14 +88,14 @@ public final class ElevatorConstants {
 public static class GroundConstants {
   public static final double kP = 0; // radians to rotations
   public static final double kI = 0;
-  public static final double kD = 0.3;
+  public static final double kD = 0;
   public static final double ksimP = 120;
   public static final double ksimI = 0;
   public static final double ksimD =  2;
 
-  public static final double kS = 0.1;
-  public static final double kG = 3 ;
-  public static final double kV = 3.74 ;
+  public static final double kS = 0;
+  public static final double kG = 0 ;
+  public static final double kV = 0 ;
   public static final double ksimS = 0.1;
   public static final double ksimG = 3;
   public static final double ksimV = 3.74;
@@ -106,19 +104,19 @@ public static class GroundConstants {
   public static final String[] sprocket = {"42:22"};
   public static final Current statorCurrentLimit = Amps.of(60);
 
-  public static final Angle softLimitMin = Degrees.of(50);
-  public static final Angle softLimitMax = Degrees.of(180);
-  public static final Angle hardLimitMin = Degrees.of(40);
-  public static final Angle hardLimitMax = Degrees.of(185);
+  public static final Angle softLimitMin = Degrees.of(0);
+  public static final Angle softLimitMax = Degrees.of(145);
+  public static final Angle hardLimitMin = Degrees.of(0);
+  public static final Angle hardLimitMax = Degrees.of(145);
 
   public static final Distance armLength = Meters.of(0.3511296);
   public static final Mass armMass =  Pounds.of(10);
   
-  public static final Angle startingPosition = Degrees.of(180); // setting position of relative encoder
-  public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
+  public static final Angle startingPosition = Degrees.of(145); // setting position of relative encoder
+  //public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
   public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
 
-  public static final Angle kStartingPose = Degrees.of(130);
+  public static final Angle kStartingPose = Degrees.of(145);
 }
 public static class OutakeConstants {
   
@@ -126,11 +124,11 @@ public static class OutakeConstants {
 
   public static final Angle kArmHP = Degrees.of(145);
   
-  public static final Angle kHorizontalZero = Degrees.of(15); // Parallel to the ground at 15deg
-  public static final Angle softLimitMin = Degrees.of(-50);
-  public static final Angle hardLimitMax = Degrees.of(65);
-  public static final Angle hardLimitMin = Degrees.of(-55);
-  public static final Angle softLimitMax = Degrees.of(55);
+  //public static final Angle kHorizontalZero = Degrees.of(15); // Parallel to the ground at 15deg
+  public static final Angle softLimitMin = Degrees.of(-25);
+  public static final Angle hardLimitMax = Degrees.of(60);
+  public static final Angle hardLimitMin = Degrees.of(-25);
+  public static final Angle softLimitMax = Degrees.of(60);
 
 public static final double kP = 0;
 public static final double kI = 0;
@@ -144,7 +142,7 @@ public static final double ksimG = 3;
 public static final double ksimV = 3.74;
 
 
-public static final Angle kStartingPose = Degrees.of(-15);
+public static final Angle kStartingPose = Degrees.of(60);
 
 public static final Distance kLength = Meters.of(0.3471418);
 
@@ -154,7 +152,7 @@ public static final double kG = 0;
 public static final double kV = 0;
 
 
-public static String[] kgearbox = {"5:1"};
+public static String[] kgearbox = {"9:1"};
 
 public static Mass kMass = Pounds.of(6);
 

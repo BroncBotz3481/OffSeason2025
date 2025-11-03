@@ -80,15 +80,12 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withStatorCurrentLimit(GroundConstants.statorCurrentLimit)
   .withClosedLoopRampRate(Seconds.of(0.25))
   .withOpenLoopRampRate(Seconds.of(0.25))
-  .withExternalEncoder(m_motor.getAbsoluteEncoder())
-  .withExternalEncoderInverted(true)
-  .withUseExternalFeedbackEncoder(true)
   ;
   
   //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
   
   // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNeoVortex(1), smcConfig);
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(1), smcConfig);
  
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
@@ -100,9 +97,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withLength(GroundConstants.armLength)
   .withMass(GroundConstants.armMass)
   // Telemetry name and verbosity for the arm.
-  .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
-  
-  .withHorizontalZero(GroundConstants.kHorizontalZero); 
+  .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
 
   
   // Arm Mechanism
@@ -110,7 +105,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public IntakeArmSubsystem() {
-   sparkSmartMotorController.synchronizeRelativeEncoder(); 
+   //sparkSmartMotorController.synchronizeRelativeEncoder(); 
   }
  
 

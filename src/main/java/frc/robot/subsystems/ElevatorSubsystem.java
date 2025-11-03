@@ -90,7 +90,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(ElevatorConstants.statorCurrentLimit)
             .withClosedLoopRampRate(Seconds.of(0.25))
             .withOpenLoopRampRate(Seconds.of(0.25))
-            .withFollowers(Pair.of(new SparkMax(CanIDs.ElevatorFollower, MotorType.kBrushless), false));
+            .withFollowers(Pair.of(new SparkMax(CanIDs.ElevatorFollower, MotorType.kBrushless), true));
 
 
     // Vendor motor controller object

@@ -36,16 +36,16 @@ public class Setpoints
     public static class OuttakeArm
     {
 
-    public static double passAngle = 45;// TOtAl GuesS
-      public static double L1 = -45;
-      public static double L2 = -35;
-      public static double L3 = -35;
+    public static double passAngle = 59;// TOtAl GuesS
+      public static double L1 = -25;
+      public static double L2 = -15;
+      public static double L3 = -15;
       public static double L4 = -15;
     public static double sensorDistanceThreshold = 0.8;
     }
     public static class GroundIntake{
-      public static double intakeAngle = 179;
-      public static double passAngle = 50;
+      public static double intakeAngle = 0;
+      public static double passAngle = 150;
     }
 
   }
