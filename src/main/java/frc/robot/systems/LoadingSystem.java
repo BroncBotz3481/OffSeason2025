@@ -128,7 +128,7 @@ public class LoadingSystem {
 
     public Command coralLoad() {
 
-        return m_intake.setGround().alongWith(m_intakeRoller.in())
+        return m_intake.setGround().alongWith(m_intakeRoller.in(), m_outake.pass())
                 .until(this::intakeHasCoral);
 
     }

@@ -89,16 +89,22 @@ public static class GroundConstants {
   public static final double kP = 0; // radians to rotations
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final double ksimP = 20;
+
+
+
+  public static final double ksimP = 120;
   public static final double ksimI = 0;
-  public static final double ksimD =  2;
+  public static final double ksimD = 8;
+
 
   public static final double kS = 0;
   public static final double kG = 0 ;
   public static final double kV = 0 ;
+
   public static final double ksimS = 0.1;
-  public static final double ksimG = 3;
-  public static final double ksimV = 3.74;
+  public static final double ksimG = 4.3;
+  public static final double ksimV = 1;
+
 
   public static final String[] gearbox = {"16.0:1.0"};
   public static final String[] sprocket = {"42:22"};
@@ -117,6 +123,8 @@ public static class GroundConstants {
   public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
 
   public static final Angle kStartingPose = Degrees.of(145);
+
+
 }
 public static class OutakeConstants {
   
@@ -135,7 +143,7 @@ public static final double kI = 0;
 public static final double kD = 0;
 public static final double kPSim = 120;
 public static final double kISim = 0;
-public static final double kDsim = 2;
+public static final double kDsim = 8;
 
 public static final double ksimS = 0.1;
 public static final double ksimG = 3;
