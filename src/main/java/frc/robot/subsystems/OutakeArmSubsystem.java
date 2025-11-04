@@ -68,9 +68,9 @@ public class OutakeArmSubsystem extends SubsystemBase {
             .withClosedLoopRampRate(Seconds.of(0.25))
             .withOpenLoopRampRate(Seconds.of(0.25))
             .withExternalEncoder(spark.getAbsoluteEncoder())
-            .withExternalEncoderInverted(true)
+            .withExternalEncoderInverted(false)
             .withUseExternalFeedbackEncoder(true)
-            .withZeroOffset(Degrees.of(0));
+            .withZeroOffset(Degrees.of(88));
 
             //
 

@@ -33,7 +33,7 @@ public final class Constants {
     public static final double DEADBAND = 0.5;
     public static int kOperatorControllerPort = 1;
   }
-  public static final double              maxSpeed      = 7; //meters per second
+  public static final double              maxSpeed      = 2.5; //meters per second
   
 
 public final class CanIDs{
@@ -42,8 +42,8 @@ public final class CanIDs{
   public static final int ElevatorFollower = 14;
   public static final int IntakeArm = 15;
   public static final int OutakeArm = 16; 
-  public static final int IntakeRoller = 17;
-  public static final int OuttakeRoller= 18;
+  public static final int IntakeRoller = 18;
+  public static final int OuttakeRoller= 17;
 
 }
 
@@ -89,7 +89,7 @@ public static class GroundConstants {
   public static final double kP = 0; // radians to rotations
   public static final double kI = 0;
   public static final double kD = 0;
-  public static final double ksimP = 120;
+  public static final double ksimP = 20;
   public static final double ksimI = 0;
   public static final double ksimD =  2;
 
@@ -125,10 +125,10 @@ public static class OutakeConstants {
   public static final Angle kArmHP = Degrees.of(145);
   
   //public static final Angle kHorizontalZero = Degrees.of(15); // Parallel to the ground at 15deg
-  public static final Angle softLimitMin = Degrees.of(-25);
-  public static final Angle hardLimitMax = Degrees.of(60);
-  public static final Angle hardLimitMin = Degrees.of(-25);
-  public static final Angle softLimitMax = Degrees.of(60);
+  public static final Angle softLimitMin = Degrees.of(-2);
+  public static final Angle hardLimitMax = Degrees.of(62.3);
+  public static final Angle hardLimitMin = Degrees.of(-2);
+  public static final Angle softLimitMax = Degrees.of(62.3);
 
 public static final double kP = 0;
 public static final double kI = 0;
@@ -142,7 +142,7 @@ public static final double ksimG = 3;
 public static final double ksimV = 3.74;
 
 
-public static final Angle kStartingPose = Degrees.of(60);
+public static final Angle kStartingPose = Degrees.of(0);
 
 public static final Distance kLength = Meters.of(0.3471418);
 
@@ -161,7 +161,8 @@ public static Mass kMass = Pounds.of(6);
 
 
 public static class IntakeConstants{
-  public static final double kRollerSpeed = 0.8;
+  public static final double kRollerSpeed = 0.5;
+  public static final double kGroundRollerSpeed = 1;
 public static final int kLaserSenseDistancemm = 5;
   public static double kCurrentLoaded = 50;
 }

@@ -148,10 +148,10 @@ public void defaultCommands(){
       m_driverController.button(2).onTrue(loadingSystem.coralTransfer());
       m_driverController.button(3).onTrue(loadingSystem.coralLoad().andThen(loadingSystem.coralTransfer()));
     }
-    m_driverController.button(7).whileTrue(intakeArmSubsystem.sysId());
-    m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
-    m_driverController.button(2).whileTrue(loadingSystem.coralLoadAuto());
-    m_driverController.button(3).whileTrue(loadingSystem.coralLoad()).whileFalse(loadingSystem.coralTransfer());
+    // m_driverController.button(7).whileTrue(intakeArmSubsystem.sysId());
+    // m_driverController.button(1).whileTrue(loadingSystem.coralLoad());
+    // m_driverController.button(2).whileTrue(loadingSystem.coralLoadAuto());
+    // m_driverController.button(3).whileTrue(loadingSystem.coralLoad()).whileFalse(loadingSystem.coralTransfer());
 
     /////////////////// ---------- BUTTONS ---------- \\\\\\\\\\\\\\\\\\\\\\\
 
@@ -179,19 +179,26 @@ public void defaultCommands(){
 
     } else {
 
-      m_operatorController.rightBumper().whileTrue(loadingSystem.coralLoad());
-      m_operatorController.leftBumper().onTrue(loadingSystem.coralLoadAuto());
+      // m_operatorController.rightBumper().whileTrue(loadingSystem.coralLoad());
+      // m_operatorController.leftBumper().onTrue(loadingSystem.coralLoadAuto());
   
-      m_operatorController.a().onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
-      m_operatorController.b().onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
-      m_operatorController.x().onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
-      m_operatorController.y().onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
+      // m_operatorController.a().onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
+      // m_operatorController.b().onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
+      // m_operatorController.x().onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
+      // m_operatorController.y().onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
   
-      m_operatorController.povUp().whileTrue(outtakeRollers.out());
-      m_operatorController.povDown().onTrue(intakeArmSubsystem.setGround());
+      // m_operatorController.povUp().whileTrue(outtakeRollers.out());
+      // m_operatorController.povDown().onTrue(intakeArmSubsystem.setGround());
 
+      
     }
 
+    m_operatorController.rightTrigger(0.5).whileTrue(outtakeRollers.out());
+    m_operatorController.rightTrigger(0.5).whileFalse(outtakeRollers.stop());
+    m_operatorController.leftTrigger(0.5).whileTrue(groundRollers.in());
+   m_operatorController.leftTrigger(0.5).whileFalse(groundRollers.stop());
+   m_operatorController.leftBumper().whileTrue(groundRollers.out());
+   m_operatorController.leftBumper().whileFalse(groundRollers.stop());
 
   }
 
