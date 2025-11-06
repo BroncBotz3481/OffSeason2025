@@ -169,8 +169,8 @@ public static Mass kMass = Pounds.of(6);
 
 
 public static class IntakeConstants{
-  public static final double kRollerSpeed = 0.5;
-  public static final double kGroundRollerSpeed = 1;
+  public static final double kRollerSpeed = 0.4;
+  public static final double kGroundRollerSpeed = 0.5;
 public static final int kLaserSenseDistancemm = 5;
   public static double kCurrentLoaded = 50;
 }

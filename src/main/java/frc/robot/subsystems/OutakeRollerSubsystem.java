@@ -45,7 +45,7 @@ public class OutakeRollerSubsystem extends SubsystemBase
       SparkMaxConfig config = new SparkMaxConfig();
       config
             .inverted(true)
-            .smartCurrentLimit(60);
+            .smartCurrentLimit(100);
             config.idleMode(IdleMode.kCoast);
       m_rollerMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
       // TODO: Set the default command, if any, for this subsystem by calling setDefaultCommand(command) done

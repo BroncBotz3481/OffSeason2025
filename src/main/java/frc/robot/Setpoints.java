@@ -21,7 +21,7 @@ public class Setpoints
     public static class Coral
     {
       
-      public static double L1 = Inches.of(11.5).in(Meters); 
+      public static double L1 = Inches.of(0).in(Meters); 
       public static double L2 = Inches.of(24.5).in(Meters);
       public static double L3 = Inches.of(38).in(Meters);
       public static double L4 = Inches.of(66.5).in(Meters);

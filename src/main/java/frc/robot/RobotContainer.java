@@ -51,7 +51,7 @@ public class RobotContainer {
                                                                                             -1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.3)
-                                                            .scaleRotation(0.6)
+                                                            .scaleRotation(0.3)
                                                             .allianceRelativeControl(false);
   SwerveInputStream driveDirectAngle     = driveAngularVelocity.copy()
                                                                .withControllerHeadingAxis(() -> m_driverController.getRightX(),
@@ -98,7 +98,7 @@ public void defaultCommands(){
   // elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdDefer());
 
   intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.set(0));
-  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.set(0));
+  outakeArmSubsystem.setDefaultCommand(outakeArmSubsystem.setAngle(0));
   elevatorSubsystem.setDefaultCommand(elevatorSubsystem.set(0));
 
   drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
@@ -129,6 +129,7 @@ public void defaultCommands(){
       m_driverController.button(2).onTrue(elevatorSubsystem.CoralL2());
       m_driverController.button(3).onTrue(elevatorSubsystem.CoralL3());
       m_driverController.button(4).onTrue(elevatorSubsystem.CoralL4());
+      m_driverController.button(5).whileTrue(elevatorSubsystem.toMin());
     }
     if (testingGR){
       m_driverController.button(1).onTrue(intakeArmSubsystem.setPass());
@@ -166,16 +167,18 @@ public void defaultCommands(){
 
     if (Robot.isSimulation()){
 
-      m_operatorController.button(1).whileTrue(loadingSystem.coralLoad());
-      m_operatorController.button(2).onTrue(loadingSystem.coralLoadAuto());
+      // m_operatorController.button(1).whileTrue(loadingSystem.coralLoad());
+      // m_operatorController.button(2).onTrue(loadingSystem.coralLoadAuto());
   
-      m_operatorController.button(3).onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
-      m_operatorController.button(4).onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
-      m_operatorController.button(5).onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
-      m_operatorController.button(6).onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
+      // m_operatorController.button(3).onTrue(elevatorSubsystem.CoralL1().alongWith(outakeArmSubsystem.L1()));
+      // m_operatorController.button(4).onTrue(elevatorSubsystem.CoralL2().alongWith(outakeArmSubsystem.L2()));
+      // m_operatorController.button(5).onTrue(elevatorSubsystem.CoralL3().alongWith(outakeArmSubsystem.L3()));
+      // m_operatorController.button(6).onTrue(elevatorSubsystem.CoralL4().alongWith(outakeArmSubsystem.L4()));
   
-      m_operatorController.button(7).whileTrue(outtakeRollers.out());
-      m_operatorController.button(8).onTrue(intakeArmSubsystem.setGround());
+      // m_operatorController.button(7).whileTrue(outtakeRollers.out());
+      // m_operatorController.button(8).onTrue(intakeArmSubsystem.setGround());
+      // m_operatorController.button(9).whileTrue(outakeArmSubsystem.setAngle(20));
+      // m_operatorController.button(9).whileFalse(outakeArmSubsystem.setAngle(0));
 
     } else {
 
@@ -193,12 +196,21 @@ public void defaultCommands(){
       
     }
 
-    m_operatorController.rightTrigger(0.5).whileTrue(outtakeRollers.out());
-    m_operatorController.rightTrigger(0.5).whileFalse(outtakeRollers.stop());
-    m_operatorController.leftTrigger(0.5).whileTrue(groundRollers.in());
-   m_operatorController.leftTrigger(0.5).whileFalse(groundRollers.stop());
-   m_operatorController.leftBumper().whileTrue(groundRollers.out());
-   m_operatorController.leftBumper().whileFalse(groundRollers.stop());
+    m_driverController.rightTrigger(0.5).whileTrue(outtakeRollers.out());
+    m_driverController.rightTrigger(0.5).whileFalse(outtakeRollers.stop());
+    m_driverController.leftTrigger(0.5).whileTrue(groundRollers.in());
+   m_driverController.leftTrigger(0.5).whileFalse(groundRollers.stop());
+   m_driverController.leftBumper().whileTrue(groundRollers.out());
+   m_driverController.leftBumper().whileFalse(groundRollers.stop());
+   m_driverController.y().whileTrue(outakeArmSubsystem.setAngle(20));
+   m_driverController.y().whileFalse(outakeArmSubsystem.setAngle(0));
+   m_operatorController.povUp().whileTrue(elevatorSubsystem.CoralL3());
+   m_operatorController.povDown().whileTrue(elevatorSubsystem.setElevatorHeight(0));
+  //  m_operatorController.x().whileTrue(intakeArmSubsystem.setAngle(25));
+  //  m_operatorController.x().whileFalse(intakeArmSubsystem.setAngle(2));
+
+
+
 
   }
 
